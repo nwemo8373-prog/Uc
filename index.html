@@ -173,6 +173,41 @@
             cursor: pointer;
         }
 
+        /* قسم الشروط والأحكام */
+        .terms-section {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 16px;
+        }
+        .terms-section h3 {
+            font-size: 15px;
+            color: #60a5fa;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .terms-section ul {
+            list-style-type: none;
+            padding-right: 0;
+        }
+        .terms-section li {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+            position: relative;
+            padding-right: 15px;
+        }
+        .terms-section li::before {
+            content: "•";
+            color: #3b82f6;
+            position: absolute;
+            right: 0;
+            font-weight: bold;
+        }
+
         /* نافذة الدفع اختيار الطرق المماثلة لـ Midasbuy */
         .modal {
             position: fixed;
@@ -411,6 +446,17 @@
     <div class="container">
         <div class="section-title"><i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> الشدات بخصم تلقائي حصري</div>
         <div class="grid-cards" id="packagesGrid"></div>
+    </div>
+
+    <!-- قسم الشروط والأحكام -->
+    <div class="terms-section">
+        <h3><i class="fa-solid fa-file-contract"></i> الشروط والأحكام</h3>
+        <ul>
+            <li>تأكد من صحة معرف اللاعب (Player ID) المدخل قبل إتمام عملية الدفع لتفادي تحويل الشدات لحساب خاطئ.</li>
+            <li>يجب إرفاق صورة إيصال التحويل الصحيحة ورقم الهاتف المحول منه للتحقق السريع وإتمام الشحن.</li>
+            <li>جميع عمليات الشحن تتم بشكل رسمي وآمن تماماً عبر المتجر المعتمد.</li>
+            <li>لا يمكن استرجاع الأموال أو إلغاء الطلب بعد تنفيذ عملية الشحن وإضافة الشدات للحساب بنجاح.</li>
+        </ul>
     </div>
 
     <!-- الأزرار العائمة (بوت التليجرام + مساعد الذكاء الاصطناعي) -->
