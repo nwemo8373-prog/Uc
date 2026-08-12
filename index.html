@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Midasbuy - المتجر الرسمي المعتمد لشحن الشدات</title>
+    <title>Midasbuy - المتجر الرسمي المعتمد لشحن الشدات ووثائق Gemini Interactions API</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -91,8 +91,6 @@
             border: 1px solid #3b82f6;
             object-fit: cover;
         }
-        
-        /* تصغير وحفظ تناسق بانر اللعبة الكبير */
         .banner-image-container {
             width: 100%;
             height: 140px;
@@ -107,7 +105,6 @@
             object-fit: cover;
             object-position: center top;
         }
-
         .player-id-box {
             background: linear-gradient(90deg, #0284c7, #2563eb);
             border-radius: 10px;
@@ -119,8 +116,6 @@
             font-weight: 700;
             font-size: 13px;
         }
-
-        /* شبكة الكروت والعروض متوافقة مع الموبايل */
         .container {
             padding: 12px;
         }
@@ -191,8 +186,46 @@
             font-size: 12px;
             cursor: pointer;
         }
+        
+        /* قسم التوثيق البرمجي (Interactions API Documentation) */
+        .docs-section {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 12px;
+            line-height: 1.6;
+        }
+        .docs-section h2, .docs-section h3 {
+            color: #60a5fa;
+            margin-top: 12px;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        .docs-section p, .docs-section li {
+            font-size: 12px;
+            color: #d1d5db;
+        }
+        .docs-section ul {
+            padding-right: 18px;
+            margin-bottom: 10px;
+        }
+        .docs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 11px;
+        }
+        .docs-table th, .docs-table td {
+            border: 1px solid #374151;
+            padding: 6px 8px;
+            text-align: right;
+        }
+        .docs-table th {
+            background: #1f2937;
+            color: #93c5fd;
+        }
 
-        /* قسم الشروط والأحكام */
         .terms-section {
             background: #111827;
             border: 1px solid #1f2937;
@@ -226,8 +259,6 @@
             right: 0;
             font-weight: bold;
         }
-
-        /* نافذة الدفع والشرح المخصص */
         .modal {
             position: fixed;
             top: 50%;
@@ -273,8 +304,6 @@
             border-color: #3b82f6;
             background: #1e293b;
         }
-
-        /* نافذة الإعلان المنبثق بالفيديو */
         .ad-modal {
             position: fixed;
             top: 0;
@@ -325,8 +354,6 @@
             background: #1e293b;
             font-weight: bold;
         }
-
-        /* الأزرار العائمة */
         .floating-buttons {
             position: fixed;
             bottom: 16px;
@@ -354,8 +381,6 @@
         .float-btn.ai {
             background: linear-gradient(135deg, #8b5cf6, #6366f1);
         }
-
-        /* صندوق المحادثة الذكي */
         .ai-chat-box {
             position: fixed;
             bottom: 75px;
@@ -464,7 +489,6 @@
             </div>
         </div>
         
-        <!-- حاوية صورة البانر المصغرة والمتناسقة -->
         <div class="banner-image-container">
             <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80" onerror="this.src='https://images.seeklogo.com/logo-png/43/2/pubg-mobile-logo-png_seeklogo-434614.png'" alt="PUBG Banner">
         </div>
@@ -479,6 +503,47 @@
     <div class="container">
         <div class="section-title"><i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> الشدات بخصم تلقائي حصري</div>
         <div class="grid-cards" id="packagesGrid"></div>
+    </div>
+
+    <!-- قسم توثيق Interactions API البرمجي المحدث -->
+    <div class="docs-section">
+        <h2>Interactions API لنماذج Gemini (تحديث يونيو 2026)</h2>
+        <p>تعتبر Interactions API الطريقة المثلى للبناء باستخدام نماذج ووكلاء Gemini. اعتباراً من يونيو 2026، أصبحت متاحة بشكل عام (Generally Available) وموصى بها لكافة المشاريع الجديدة، مع استمرار الدعم لواجهة `generateContent` كواجهة قديمة (Legacy).</p>
+        
+        <h3>لماذا تستخدم Interactions API؟</h3>
+        <ul>
+            <li><strong>واجهة موحدة لجميع التطبيقات:</strong> مصممة لتكون المعيار القياسي لكل حالات الاستخدام، بما في ذلك التوليد الأحادي، الفهم المتعدد الوسائط، المخرجات المهيكلة، واستدعاء الأدوات.</li>
+            <li><strong>إدارة الحالة على الخادم (Server-side State):</strong> استخدام بارامتر `previous_interaction_id` للحفاظ على سياق المحادثة وتخفيض التكاليف عبر معدلات تخزين مؤقت أعلى.</li>
+            <li><strong>التنفيذ في الخلفية (Background Execution):</strong> دعم المهام طويلة الأجل عبر ضبط `background=true`.</li>
+        </ul>
+
+        <h3>النماذج والوكلاء المدعومة</h3>
+        <table class="docs-table">
+            <thead>
+                <tr>
+                    <th>اسم النموذج</th>
+                    <th>النوع</th>
+                    <th>معرف النموذج (ID)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Gemini 3.6 Flash</td>
+                    <td>Model</td>
+                    <td><code>gemini-3.6-flash</code></td>
+                </tr>
+                <tr>
+                    <td>Gemini 3.5 Flash</td>
+                    <td>Model</td>
+                    <td><code>gemini-3.5-flash</code></td>
+                </tr>
+                <tr>
+                    <td>Deep Research Preview</td>
+                    <td>Agent</td>
+                    <td><code>deep-research-preview-04-2026</code></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <!-- قسم الشروط والأحكام -->
@@ -516,7 +581,6 @@
     <div class="modal" id="checkoutModal">
         <h3 style="text-align: center; margin-bottom: 10px; font-size: 15px;">إتمام الطلب وطريقة الدفع</h3>
         
-        <!-- شرح طريقة الدفع -->
         <div class="payment-instructions">
             <strong>طريقة الشحن والدفع:</strong><br>
             1. قم بالتحويل بالقيمة المطلوبة إلى رقم المحفظة الظاهر أدناه.<br>
@@ -533,7 +597,7 @@
             <label style="font-size: 11px; color: #9ca3af;">اختر طريقة الدفع</label>
             <div class="payment-method-card selected" onclick="selectPayment(this)">
                 <span>محافظ كاش (فودافون / أورانج / اتصالات)</span>
-                <span style="font-weight: bold; color: #60a5fa;">01206561893</span>
+                <span style="font-weight: bold; color: #60a5fa;">01012345678</span>
             </div>
             <div class="payment-method-card" onclick="selectPayment(this)">
                 <span>خدمة فوري (Fawry Pay)</span>
