@@ -1,821 +1,5442 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Midasbuy - المتجر الرسمي المعتمد لشحن الشدات ووثائق Gemini Interactions API</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            background-color: #0b0f19;
-            color: #ffffff;
-            direction: rtl;
-            padding-bottom: 90px;
-        }
-        header {
-            background: #111827;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #1f2937;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .logo {
-            font-weight: 900;
-            font-size: 18px;
-            color: #ff6b00;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .logo img {
-            width: 26px;
-            height: 26px;
-            border-radius: 6px;
-        }
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .country-selector {
-            background: #1f2937;
-            color: #fff;
-            border: 1px solid #374151;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-        }
-        .login-btn {
-            background: #2563eb;
-            color: #fff;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-        }
-        .hero-banner {
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-            padding: 12px;
-            border-bottom: 1px solid #1f2937;
-        }
-        .game-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .game-info img {
-            width: 45px;
-            height: 45px;
-            border-radius: 10px;
-            border: 1px solid #3b82f6;
-            object-fit: cover;
-        }
-        .banner-image-container {
-            width: 100%;
-            height: 140px;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 10px;
-            border: 1px solid #374151;
-        }
-        .banner-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center top;
-        }
-        .player-id-box {
-            background: linear-gradient(90deg, #0284c7, #2563eb);
-            border-radius: 10px;
-            padding: 10px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 13px;
-        }
-        .container {
-            padding: 12px;
-        }
-        .section-title {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #f3f4f6;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .grid-cards {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        .card {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-            position: relative;
-        }
-        .card img {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            margin-bottom: 6px;
-        }
-        .discount-badge {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            background: #ef4444;
-            color: #fff;
-            font-size: 9px;
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-weight: 700;
-        }
-        .card-title {
-            font-size: 13px;
-            font-weight: 800;
-            color: #ffffff;
-        }
-        .old-price {
-            text-decoration: line-through;
-            color: #6b7280;
-            font-size: 11px;
-            margin-top: 2px;
-        }
-        .new-price {
-            color: #60a5fa;
-            font-weight: 800;
-            font-size: 14px;
-            margin-bottom: 6px;
-        }
-        .buy-btn {
-            background: #2563eb;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 7px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        
-        /* قسم التوثيق البرمجي (Interactions API Documentation) */
-        .docs-section {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-            padding: 16px;
-            margin: 16px 12px;
-            line-height: 1.6;
-        }
-        .docs-section h2, .docs-section h3 {
-            color: #60a5fa;
-            margin-top: 12px;
-            margin-bottom: 8px;
-            font-size: 15px;
-        }
-        .docs-section p, .docs-section li {
-            font-size: 12px;
-            color: #d1d5db;
-        }
-        .docs-section ul {
-            padding-right: 18px;
-            margin-bottom: 10px;
-        }
-        .docs-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 11px;
-        }
-        .docs-table th, .docs-table td {
-            border: 1px solid #374151;
-            padding: 6px 8px;
-            text-align: right;
-        }
-        .docs-table th {
-            background: #1f2937;
-            color: #93c5fd;
-        }
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
-        .terms-section {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 10px;
-            padding: 14px;
-            margin: 16px 12px;
-        }
-        .terms-section h3 {
-            font-size: 14px;
-            color: #60a5fa;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .terms-section ul {
-            list-style-type: none;
-            padding-right: 0;
-        }
-        .terms-section li {
-            font-size: 11px;
-            color: #9ca3af;
-            margin-bottom: 5px;
-            position: relative;
-            padding-right: 12px;
-        }
-        .terms-section li::before {
-            content: "•";
-            color: #3b82f6;
-            position: absolute;
-            right: 0;
-            font-weight: bold;
-        }
-        .modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: #111827;
-            border: 1px solid #374151;
-            padding: 16px;
-            border-radius: 14px;
-            width: 92%;
-            max-width: 380px;
-            z-index: 3000;
-            transition: 0.2s ease-in-out;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-        .modal.active {
-            transform: translate(-50%, -50%) scale(1);
-        }
-        .payment-instructions {
-            background: #1e293b;
-            border-right: 3px solid #3b82f6;
-            padding: 8px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            color: #cbd5e1;
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-        .payment-method-card {
-            background: #1f2937;
-            border: 2px solid #374151;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .payment-method-card.selected {
-            border-color: #3b82f6;
-            background: #1e293b;
-        }
-        .ad-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 5000;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .ad-modal.active {
-            display: flex;
-        }
-        .ad-content {
-            position: relative;
-            width: 92%;
-            max-width: 400px;
-            background: #111827;
-            border-radius: 10px;
-            overflow: hidden;
-            text-align: center;
-        }
-        .ad-content video {
-            width: 100%;
-            max-height: 260px;
-            object-fit: cover;
-            cursor: pointer;
-        }
-        .skip-btn {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            border: 1px solid #ffffff50;
-            padding: 5px 12px;
-            border-radius: 18px;
-            font-size: 11px;
-            cursor: pointer;
-        }
-        .ad-description {
-            padding: 10px;
-            font-size: 12px;
-            color: #fdba74;
-            background: #1e293b;
-            font-weight: bold;
-        }
-        .floating-buttons {
-            position: fixed;
-            bottom: 16px;
-            left: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            z-index: 999;
-        }
-        .float-btn {
-            background: #229ED9;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            border: none;
-            cursor: pointer;
-        }
-        .float-btn.ai {
-            background: linear-gradient(135deg, #8b5cf6, #6366f1);
-        }
-        .ai-chat-box {
-            position: fixed;
-            bottom: 75px;
-            left: 12px;
-            width: 290px;
-            height: 340px;
-            background: #111827;
-            border: 1px solid #374151;
-            border-radius: 10px;
-            display: none;
-            flex-direction: column;
-            z-index: 2000;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-        }
-        .ai-chat-box.active {
-            display: flex;
-        }
-        .chat-header {
-            background: #1f2937;
-            padding: 8px 10px;
-            font-weight: bold;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #374151;
-        }
-        .chat-messages {
-            flex: 1;
-            padding: 8px;
-            overflow-y: auto;
-            font-size: 11px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .msg {
-            padding: 6px 10px;
-            border-radius: 6px;
-            max-width: 85%;
-        }
-        .msg.bot {
-            background: #1e293b;
-            color: #e2e8f0;
-            align-self: flex-start;
-        }
-        .msg.user {
-            background: #2563eb;
-            color: #fff;
-            align-self: flex-end;
-        }
-        .chat-input-area {
-            display: flex;
-            padding: 6px;
-            border-top: 1px solid #374151;
-        }
-        .chat-input-area input {
-            flex: 1;
-            background: #1f2937;
-            border: 1px solid #4b5563;
-            color: white;
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 11px;
-        }
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            display: none;
-            z-index: 1500;
-        }
-        .overlay.active {
-            display: block;
-        }
-    </style>
+<meta name="theme-color" content="#080b12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+
+<title>NEGM CHAT</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
+
+:root{
+    --bg:#070a10;
+    --bg2:#0c111a;
+    --card:#101722;
+    --card2:#141c28;
+    --border:rgba(255,255,255,.08);
+    --text:#f5f7fb;
+    --muted:#8e99aa;
+    --accent:#6c5ce7;
+    --accent2:#8f7cff;
+    --green:#21d88b;
+    --red:#ff4f67;
+    --yellow:#ffc857;
+    --blue:#42a5ff;
+    --shadow:0 20px 60px rgba(0,0,0,.35);
+    --radius:22px;
+}
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Cairo,Arial,sans-serif;
+}
+
+button,input,textarea{
+    font-family:inherit;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+button:active {
+    transform: scale(0.96);
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* =========================
+   SPLASH
+========================= */
+
+#splash{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:
+      radial-gradient(circle at 50% 35%,rgba(108,92,231,.22),transparent 35%),
+      var(--bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+}
+
+.logo-big{
+    width:100px;
+    height:100px;
+    border-radius:32px;
+    background:linear-gradient(145deg,var(--accent2),var(--accent));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:45px;
+    font-weight:900;
+    box-shadow:0 25px 80px rgba(108,92,231,.35);
+    animation:logoPop .8s ease;
+}
+
+.splash-title{
+    margin-top:20px;
+    font-size:27px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.splash-sub{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:5px;
+}
+
+.loader{
+    width:140px;
+    height:4px;
+    background:#161d29;
+    border-radius:10px;
+    margin-top:25px;
+    overflow:hidden;
+}
+
+.loader span{
+    display:block;
+    width:40%;
+    height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    animation:load 1.2s infinite;
+}
+
+@keyframes load{
+    from{transform:translateX(250%)}
+    to{transform:translateX(-300%)}
+}
+
+@keyframes logoPop{
+    from{opacity:0;transform:scale(.6)}
+    to{opacity:1;transform:scale(1)}
+}
+
+/* =========================
+   AUTH
+========================= */
+
+#auth{
+    position:fixed;
+    inset:0;
+    z-index:5000;
+    background:
+      radial-gradient(circle at 20% 10%,rgba(108,92,231,.15),transparent 30%),
+      radial-gradient(circle at 90% 80%,rgba(66,165,255,.08),transparent 30%),
+      var(--bg);
+    overflow:auto;
+}
+
+.auth-wrap{
+    min-height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:25px;
+}
+
+.auth-card{
+    width:100%;
+    max-width:430px;
+    background:rgba(16,23,34,.9);
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:28px;
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(25px);
+}
+
+.auth-brand{
+    text-align:center;
+    margin-bottom:28px;
+}
+
+.auth-brand .mini-logo{
+    width:68px;
+    height:68px;
+    margin:auto;
+    border-radius:22px;
+    background:linear-gradient(145deg,var(--accent2),var(--accent));
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:28px;
+    font-weight:900;
+}
+
+.auth-brand h1{
+    margin:15px 0 3px;
+    font-size:25px;
+}
+
+.auth-brand p{
+    margin:0;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.auth-tabs{
+    display:grid;
+    grid-template-columns:1fr; /* تم إخفاء زر المالك من الواجهة العامة بناءً على طلب إخفاء كود المالك */
+    background:#0b1018;
+    border-radius:15px;
+    padding:4px;
+    margin-bottom:20px;
+}
+
+.auth-tab{
+    background:transparent;
+    color:var(--muted);
+    padding:11px;
+    border-radius:12px;
+    font-weight:800;
+}
+
+.auth-tab.active{
+    background:var(--accent);
+    color:#fff;
+}
+
+.field{
+    margin-bottom:15px;
+}
+
+.field label{
+    display:block;
+    color:#bac2cf;
+    font-size:12px;
+    margin-bottom:7px;
+}
+
+.input{
+    width:100%;
+    height:52px;
+    background:#0a0f17;
+    border:1px solid var(--border);
+    border-radius:15px;
+    outline:none;
+    color:#fff;
+    padding:0 15px;
+    font-size:14px;
+    transition:.2s;
+}
+
+.input:focus{
+    border-color:rgba(143,124,255,.7);
+    box-shadow:0 0 0 4px rgba(108,92,231,.08);
+}
+
+.primary{
+    width:100%;
+    min-height:52px;
+    border-radius:15px;
+    color:#fff;
+    font-weight:900;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:0 10px 30px rgba(108,92,231,.22);
+}
+
+.secondary{
+    width:100%;
+    min-height:50px;
+    border-radius:15px;
+    color:#fff;
+    background:#171f2c;
+    border:1px solid var(--border);
+}
+
+.auth-note{
+    text-align:center;
+    color:#697487;
+    font-size:10px;
+    margin-top:18px;
+    line-height:1.8;
+}
+
+.owner-box{
+    margin-top:18px;
+    border:1px solid rgba(255,200,87,.15);
+    background:rgba(255,200,87,.04);
+    border-radius:17px;
+    padding:13px;
+    color:#c4cad4;
+    font-size:11px;
+}
+
+.owner-box strong{
+    color:var(--yellow);
+}
+
+/* =========================
+   APP
+========================= */
+
+#app{
+    position:fixed;
+    inset:0;
+    display:flex;
+    background:var(--bg);
+}
+
+.sidebar{
+    width:350px;
+    min-width:350px;
+    border-left:1px solid var(--border);
+    background:rgba(10,14,21,.96);
+    display:flex;
+    flex-direction:column;
+    z-index:20;
+}
+
+.sidebar-head{
+    padding: 18px;
+    /* ضبط الأزرار العلوية لترتفع وتتلائم مع حواف الجهاز (1/2 سم من فوق و1/2 سم من تحت) */
+    padding-top: calc(max(env(safe-area-inset-top), 8px) + 5px);
+    padding-bottom: calc(12px + 5px);
+    border-bottom:1px solid var(--border);
+}
+
+.brand-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.brand-logo{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+}
+
+.brand-name{
+    font-size:17px;
+    font-weight:900;
+}
+
+.brand-sub{
+    font-size:9px;
+    color:var(--muted);
+}
+
+.icon-btn{
+    width:42px;
+    height:42px;
+    border-radius:13px;
+    background:#121925;
+    border:1px solid var(--border);
+    color:#fff;
+    font-size:18px;
+}
+
+.search-box{
+    margin-top:15px;
+    position:relative;
+}
+
+.search-box input{
+    padding-right:42px;
+}
+
+.search-icon{
+    position:absolute;
+    right:14px;
+    top:14px;
+    color:var(--muted);
+}
+
+.chat-list{
+    flex:1;
+    overflow:auto;
+    padding:8px;
+}
+
+.section-title{
+    padding:12px 10px 5px;
+    font-size:11px;
+    color:#697487;
+    font-weight:800;
+}
+
+.chat-item{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    padding:12px;
+    border-radius:18px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.chat-item:hover,
+.chat-item.active{
+    background:#141c29;
+}
+
+.avatar{
+    position:relative;
+    width:50px;
+    height:50px;
+    min-width:50px;
+    border-radius:17px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#242d3c,#151b26);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+}
+
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.online-dot{
+    position:absolute;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:var(--green);
+    border:2px solid #101722;
+    bottom:0;
+    left:0;
+}
+
+.chat-info{
+    min-width:0;
+    flex:1;
+}
+
+.chat-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.chat-name{
+    font-size:13px;
+    font-weight:800;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.chat-time{
+    font-size:8px;
+    color:#687386;
+}
+
+.chat-preview{
+    color:#737e90;
+    font-size:10px;
+    margin-top:3px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:18px;
+    height:18px;
+    padding:0 5px;
+    border-radius:20px;
+    background:var(--accent);
+    color:#fff;
+    font-size:9px;
+    font-weight:900;
+}
+
+.verified{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:17px;
+    height:17px;
+    border-radius:50%;
+    background:var(--blue);
+    color:#fff;
+    font-size:10px;
+    margin-right:4px;
+    vertical-align:middle;
+}
+
+.sidebar-bottom{
+    padding:10px;
+    padding-bottom:calc(10px + env(safe-area-inset-bottom));
+    border-top:1px solid var(--border);
+}
+
+.profile-mini{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#101722;
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:8px;
+    cursor:pointer;
+}
+
+.profile-mini .avatar{
+    width:40px;
+    height:40px;
+    min-width:40px;
+    border-radius:13px;
+}
+
+.profile-mini-info{
+    min-width:0;
+    flex:1;
+}
+
+.profile-mini-name{
+    font-size:12px;
+    font-weight:800;
+}
+
+.profile-mini-status{
+    font-size:9px;
+    color:var(--green);
+}
+
+/* =========================
+   CHAT AREA
+========================= */
+
+.chat-area{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    background:
+      radial-gradient(circle at 70% 10%,rgba(108,92,231,.07),transparent 25%),
+      var(--bg);
+}
+
+.empty-chat{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    text-align:center;
+    padding:30px;
+}
+
+.empty-icon{
+    width:90px;
+    height:90px;
+    border-radius:30px;
+    background:#111925;
+    border:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:40px;
+    margin-bottom:20px;
+}
+
+.empty-chat h2{
+    margin:0 0 7px;
+}
+
+.empty-chat p{
+    color:var(--muted);
+    font-size:12px;
+    max-width:300px;
+    line-height:1.8;
+}
+
+.chat-header{
+    min-height:76px;
+    padding:10px 18px;
+    padding-top:calc(10px + env(safe-area-inset-top));
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:rgba(7,10,16,.78);
+    backdrop-filter:blur(20px);
+}
+
+.back-mobile{
+    display:none;
+}
+
+.chat-head-info{
+    flex:1;
+    min-width:0;
+}
+
+.chat-head-name{
+    font-weight:900;
+    font-size:14px;
+}
+
+.chat-head-status{
+    color:var(--muted);
+    font-size:9px;
+}
+
+.chat-actions{
+    display:flex;
+    gap:7px;
+}
+
+.chat-actions .icon-btn{
+    width:38px;
+    height:38px;
+}
+
+.messages{
+    flex:1;
+    overflow:auto;
+    padding:20px;
+    scroll-behavior:smooth;
+}
+
+.day-separator{
+    display:flex;
+    justify-content:center;
+    margin:12px 0 20px;
+}
+
+.day-separator span{
+    background:#111925;
+    border:1px solid var(--border);
+    color:#687386;
+    font-size:9px;
+    padding:5px 11px;
+    border-radius:30px;
+}
+
+.message-row{
+    display:flex;
+    margin-bottom:7px;
+    align-items:flex-end;
+    gap:7px;
+    animation: fadeInMsg 0.3s ease;
+}
+
+@keyframes fadeInMsg {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message-row.mine{
+    justify-content:flex-start;
+}
+
+.message-row.theirs{
+    justify-content:flex-end;
+}
+
+.message-bubble{
+    max-width:min(78%,550px);
+    padding:10px 13px;
+    border-radius:18px;
+    position:relative;
+    box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+
+.mine .message-bubble{
+    background:linear-gradient(135deg,#5f50d7,#7968ee);
+    border-bottom-left-radius:5px;
+}
+
+.theirs .message-bubble{
+    background:#141c27;
+    border:1px solid var(--border);
+    border-bottom-right-radius:5px;
+}
+
+.message-text{
+    font-size:12px;
+    line-height:1.8;
+    white-space:pre-wrap;
+    word-break:break-word;
+}
+
+.message-meta{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:5px;
+    margin-top:3px;
+    font-size:8px;
+    opacity:.65;
+}
+
+.seen{
+    color:#83e7ff;
+}
+
+.reply-preview{
+    background:rgba(0,0,0,.16);
+    border-right:3px solid rgba(255,255,255,.55);
+    border-radius:8px;
+    padding:6px 8px;
+    margin-bottom:7px;
+    font-size:9px;
+}
+
+.media-message{
+    max-width:280px;
+    border-radius:15px;
+    overflow:hidden;
+    margin-bottom:5px;
+}
+
+.media-message img{
+    width:100%;
+    display:block;
+}
+
+.audio-message{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    min-width:210px;
+}
+
+.audio-play{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:rgba(255,255,255,.15);
+    color:#fff;
+}
+
+.audio-progress{
+    flex:1;
+}
+
+.audio-progress input{
+    width:100%;
+}
+
+.reactions{
+    display:flex;
+    gap:3px;
+    flex-wrap:wrap;
+    margin-top:4px;
+}
+
+.reaction{
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(0,0,0,.2);
+    border-radius:20px;
+    padding:2px 7px;
+    font-size:11px;
+}
+
+.typing{
+    height:22px;
+    padding:0 20px;
+    color:var(--muted);
+    font-size:9px;
+}
+
+.composer{
+    padding:10px 15px;
+    /* رفع حقل الكتابة بمليمترات فوق الكيبورد ومنطقة الحماية ليظل مرئيًا بوضوح */
+    padding-bottom:calc(15px + env(safe-area-inset-bottom, 10px));
+    border-top:1px solid var(--border);
+    background:rgba(7,10,16,.9);
+    position: relative;
+    z-index: 40;
+}
+
+.reply-bar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#111925;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:8px;
+    margin-bottom:8px;
+}
+
+.reply-bar-info{
+    flex:1;
+    min-width:0;
+}
+
+.reply-bar-title{
+    color:var(--accent2);
+    font-size:9px;
+    font-weight:800;
+}
+
+.reply-bar-text{
+    font-size:10px;
+    color:var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.composer-row{
+    display:flex;
+    align-items:flex-end;
+    gap:7px;
+}
+
+.compose-input-wrap{
+    flex:1;
+    background:#111925;
+    border:1px solid var(--border);
+    border-radius:18px;
+    display:flex;
+    align-items:flex-end;
+    padding:5px;
+}
+
+.compose-input{
+    flex:1;
+    min-height:42px;
+    max-height:120px;
+    resize:none;
+    border:0;
+    outline:0;
+    background:transparent;
+    color:#fff;
+    padding:10px;
+    font-size:12px;
+}
+
+.attach-btn,
+.send-btn,
+.record-btn{
+    width:43px;
+    height:43px;
+    border-radius:14px;
+    background:#182130;
+    color:#fff;
+    flex-shrink:0;
+}
+
+.send-btn{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+}
+
+.record-btn.recording{
+    background:var(--red);
+    animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+    50%{transform:scale(.92)}
+}
+
+/* =========================
+   BOTTOM MOBILE
+========================= */
+
+.mobile-nav{
+    display:none;
+}
+
+/* =========================
+   MODALS
+========================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:3000;
+    background:rgba(0,0,0,.7);
+    backdrop-filter:blur(8px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+}
+
+.modal-card{
+    width:100%;
+    max-width:500px;
+    max-height:92vh;
+    overflow:auto;
+    background:#101722;
+    border:1px solid var(--border);
+    border-radius:26px;
+    box-shadow:var(--shadow);
+    padding:20px;
+}
+
+.modal-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:17px;
+}
+
+.modal-title{
+    font-size:16px;
+    font-weight:900;
+}
+
+.close{
+    width:36px;
+    height:36px;
+    border-radius:12px;
+    background:#171f2c;
+    color:#fff;
+}
+
+.profile-large{
+    text-align:center;
+}
+
+.profile-large .avatar{
+    width:100px;
+    height:100px;
+    margin:auto;
+    border-radius:30px;
+}
+
+.profile-large h2{
+    margin:13px 0 2px;
+}
+
+.profile-large p{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.avatar-picker{
+    display:flex;
+    justify-content:center;
+    margin:15px 0;
+}
+
+.avatar-picker label{
+    cursor:pointer;
+}
+
+.avatar-picker input{
+    display:none;
+}
+
+.admin-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:9px;
+}
+
+.stat-card{
+    background:#141c28;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:15px;
+}
+
+.stat-icon{
+    font-size:20px;
+}
+
+.stat-value{
+    font-size:22px;
+    font-weight:900;
+    margin-top:7px;
+}
+
+.stat-label{
+    color:var(--muted);
+    font-size:9px;
+}
+
+.admin-section{
+    margin-top:20px;
+}
+
+.admin-section h3{
+    font-size:12px;
+    margin:0 0 9px;
+}
+
+.user-admin-card,
+.invite-card{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px;
+    background:#141c28;
+    border:1px solid var(--border);
+    border-radius:16px;
+    margin-bottom:7px;
+}
+
+.user-admin-card .avatar,
+.invite-card .avatar{
+    width:42px;
+    height:42px;
+    min-width:42px;
+    border-radius:14px;
+}
+
+.user-admin-info{
+    flex:1;
+    min-width:0;
+}
+
+.user-admin-name{
+    font-size:11px;
+    font-weight:800;
+}
+
+.user-admin-sub{
+    color:var(--muted);
+    font-size:8px;
+}
+
+.admin-actions{
+    display:flex;
+    gap:5px;
+}
+
+.small-btn{
+    min-width:34px;
+    height:34px;
+    border-radius:10px;
+    color:#fff;
+    background:#1b2533;
+    border:1px solid var(--border);
+    font-size:12px;
+}
+
+.small-btn.danger{
+    background:rgba(255,79,103,.12);
+    color:#ff8294;
+}
+
+.small-btn.verify{
+    background:rgba(66,165,255,.13);
+    color:#66b8ff;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+#toast{
+    position:fixed;
+    z-index:99999;
+    left:50%;
+    bottom:25px;
+    transform:translate(-50%,20px);
+    opacity:0;
+    pointer-events:none;
+    background:#151e2b;
+    border:1px solid var(--border);
+    color:#fff;
+    border-radius:14px;
+    padding:10px 16px;
+    font-size:11px;
+    box-shadow:var(--shadow);
+    transition:.3s;
+}
+
+#toast.show{
+    opacity:1;
+    transform:translate(-50%,0);
+}
+
+/* =========================
+   CONTEXT MENU
+========================= */
+
+.context-menu{
+    position:fixed;
+    z-index:7000;
+    background:#151e2b;
+    border:1px solid var(--border);
+    border-radius:15px;
+    box-shadow:var(--shadow);
+    padding:6px;
+    min-width:160px;
+}
+
+.context-menu button{
+    width:100%;
+    text-align:right;
+    background:transparent;
+    color:#fff;
+    padding:10px;
+    border-radius:9px;
+    font-size:11px;
+}
+
+.context-menu button:hover{
+    background:#202a39;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:800px){
+
+    .sidebar{
+        position:absolute;
+        inset:0;
+        width:100%;
+        min-width:0;
+        border:0;
+        transition:.3s;
+    }
+
+    .chat-area{
+        position:absolute;
+        inset:0;
+        transform:translateX(-100%);
+        transition:.3s;
+        z-index:30;
+    }
+
+    #app.mobile-chat-open .chat-area{
+        transform:translateX(0);
+    }
+
+    #app.mobile-chat-open .sidebar{
+        transform:translateX(100%);
+    }
+
+    .back-mobile{
+        display:block;
+    }
+
+    .messages{
+        padding:13px;
+    }
+
+    .message-bubble{
+        max-width:85%;
+    }
+
+    .chat-actions .optional-mobile{
+        display:none;
+    }
+
+    .mobile-nav{
+        display:grid;
+        grid-template-columns:repeat(5,1fr); /* تم تحديث الأعمدة لتسع زر الذكاء الاصطناعي الجديد */
+        border-top:1px solid var(--border);
+        padding:7px;
+        padding-bottom:calc(7px + env(safe-area-inset-bottom));
+        background:#0c111a;
+    }
+
+    .mobile-nav button{
+        height:48px;
+        background:transparent;
+        color:#697487;
+        border-radius:13px;
+        font-size:18px;
+    }
+
+    .mobile-nav button.active{
+        background:#151e2b;
+        color:var(--accent2);
+    }
+
+    .sidebar-bottom{
+        padding-bottom:5px;
+    }
+
+    .profile-mini{
+        display:none;
+    }
+}
+
+@media(max-width:420px){
+
+    .auth-card{
+        padding:20px;
+        border-radius:23px;
+    }
+
+    .admin-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .chat-header{
+        padding-left:9px;
+        padding-right:9px;
+    }
+
+    .chat-head-name{
+        font-size:12px;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <!-- الهيدر العلوي -->
-    <header>
-        <div class="logo-area">
-            <img src="pubgm_app-icon_512x512(1).e9f7efc0.png" onerror="this.src='https://images.seeklogo.com/logo-png/43/2/pubg-mobile-logo-png_seeklogo-434614.png'" alt="Logo">
-            <div class="logo">Midasbuy</div>
-        </div>
-        <div class="header-actions">
-            <select class="country-selector">
-                <option value="EG">🇪🇬 مصر (EGP)</option>
-                <option value="SA">🇸🇦 السعودية (SAR)</option>
-                <option value="AE">🇦🇪 الإمارات (AED)</option>
-            </select>
-            <button class="login-btn" onclick="openModal()">دخول</button>
-        </div>
-    </header>
+<div id="splash">
+    <div class="logo-big">N</div>
+    <div class="splash-title">NEGM CHAT</div>
+    <div class="splash-sub">Private Community Messenger</div>
+    <div class="loader"><span></span></div>
+</div>
 
-    <!-- البانر الرئيسي ومعرف اللاعب -->
-    <div class="hero-banner">
-        <div class="game-info">
-            <img src="pubgm_app-icon_512x512(1).e9f7efc0.png" onerror="this.src='https://images.seeklogo.com/logo-png/43/2/pubg-mobile-logo-png_seeklogo-434614.png'" alt="PUBG">
-            <div>
-                <h3 style="font-size: 14px;">PUBG MOBILE</h3>
-                <span style="font-size: 10px; color: #10b981;"><i class="fa-solid fa-circle-check"></i> متجر معتمد أصلياً</span>
+<div id="auth" class="hidden">
+
+    <div class="auth-wrap">
+
+        <div class="auth-card">
+
+            <div class="auth-brand">
+                <div class="mini-logo">N</div>
+                <h1>NEGM CHAT</h1>
+                <p>مجتمعك الخاص • تواصل • شارك • تحدث</p>
             </div>
-        </div>
-        
-        <div class="banner-image-container">
-            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80" onerror="this.src='https://images.seeklogo.com/logo-png/43/2/pubg-mobile-logo-png_seeklogo-434614.png'" alt="PUBG Banner">
-        </div>
 
-        <div class="player-id-box" onclick="openModal()">
-            <span id="savedPlayerIdText"><i class="fa-solid fa-user"></i> أدخل معرف اللاعب الخاص بك (ID)</span>
-            <i class="fa-solid fa-chevron-left"></i>
-        </div>
-    </div>
-
-    <!-- قائمة الشدات والأسعار المخصصة -->
-    <div class="container">
-        <div class="section-title"><i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> الشدات بخصم تلقائي حصري</div>
-        <div class="grid-cards" id="packagesGrid"></div>
-    </div>
-
-    <!-- قسم توثيق Interactions API البرمجي المحدث -->
-    <div class="docs-section">
-        <h2>Interactions API لنماذج Gemini (تحديث يونيو 2026)</h2>
-        <p>تعتبر Interactions API الطريقة المثلى للبناء باستخدام نماذج ووكلاء Gemini. اعتباراً من يونيو 2026، أصبحت متاحة بشكل عام (Generally Available) وموصى بها لكافة المشاريع الجديدة، مع استمرار الدعم لواجهة `generateContent` كواجهة قديمة (Legacy).</p>
-        
-        <h3>لماذا تستخدم Interactions API؟</h3>
-        <ul>
-            <li><strong>واجهة موحدة لجميع التطبيقات:</strong> مصممة لتكون المعيار القياسي لكل حالات الاستخدام، بما في ذلك التوليد الأحادي، الفهم المتعدد الوسائط، المخرجات المهيكلة، واستدعاء الأدوات.</li>
-            <li><strong>إدارة الحالة على الخادم (Server-side State):</strong> استخدام بارامتر `previous_interaction_id` للحفاظ على سياق المحادثة وتخفيض التكاليف عبر معدلات تخزين مؤقت أعلى.</li>
-            <li><strong>التنفيذ في الخلفية (Background Execution):</strong> دعم المهام طويلة الأجل عبر ضبط `background=true`.</li>
-        </ul>
-
-        <h3>النماذج والوكلاء المدعومة</h3>
-        <table class="docs-table">
-            <thead>
-                <tr>
-                    <th>اسم النموذج</th>
-                    <th>النوع</th>
-                    <th>معرف النموذج (ID)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Gemini 3.6 Flash</td>
-                    <td>Model</td>
-                    <td><code>gemini-3.6-flash</code></td>
-                </tr>
-                <tr>
-                    <td>Gemini 3.5 Flash</td>
-                    <td>Model</td>
-                    <td><code>gemini-3.5-flash</code></td>
-                </tr>
-                <tr>
-                    <td>Deep Research Preview</td>
-                    <td>Agent</td>
-                    <td><code>deep-research-preview-04-2026</code></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- قسم الشروط والأحكام -->
-    <div class="terms-section">
-        <h3><i class="fa-solid fa-file-contract"></i> الشروط والأحكام</h3>
-        <ul>
-            <li>تأكد من صحة معرف اللاعب (Player ID) المدخل قبل إتمام عملية الدفع.</li>
-            <li>يجب إرفاق صورة إيصال التحويل الصحيحة ورقم الهاتف المحول منه للتحقق السريع.</li>
-            <li>جميع عمليات الشحن تتم بشكل رسمي وآمن تماماً عبر المتجر المعتمد.</li>
-        </ul>
-    </div>
-
-    <!-- الأزرار العائمة -->
-    <div class="floating-buttons">
-        <button class="float-btn ai" onclick="toggleAIChat()"><i class="fa-solid fa-robot"></i> الذكاء الاصطناعي</button>
-        <a href="https://t.me/Felm_negmbot" target="_blank" class="float-btn"><i class="fa-brands fa-telegram"></i> @Felm_negmbot</a>
-    </div>
-
-    <!-- صندوق محادثة الذكاء الاصطناعي -->
-    <div class="ai-chat-box" id="aiChatBox">
-        <div class="chat-header">
-            <span>مساعد Midasbuy الذكي</span>
-            <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="toggleAIChat()"></i>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="msg bot">أهلاً بك! أنا مساعد الذكاء الاصطناعي، كيف يمكنني مساعدتك في شحن الشدات اليوم؟</div>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="aiInput" placeholder="اكتب سؤالك هنا..." onkeypress="if(event.key==='Enter') sendAIMessage()">
-            <button onclick="sendAIMessage()" style="background:#2563eb; color:white; border:none; padding:5px 8px; margin-right:4px; border-radius:4px; font-size:11px;"><i class="fa-solid fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <!-- نافذة الدفع وشرح الخطوات -->
-    <div class="modal" id="checkoutModal">
-        <h3 style="text-align: center; margin-bottom: 10px; font-size: 15px;">إتمام الطلب وطريقة الدفع</h3>
-        
-        <div class="payment-instructions">
-            <strong>طريقة الشحن والدفع:</strong><br>
-            1. قم بالتحويل بالقيمة المطلوبة إلى رقم المحفظة الظاهر أدناه.<br>
-            2. أدخل معرف اللاعب (ID) ورقم هاتفك المحول منه.<br>
-            3. ارفع صورة إيصال التحويل واضغط تأكيد الشحن ليصلك الطلب فوراً.
-        </div>
-
-        <div style="margin-bottom: 10px;">
-            <label style="font-size: 11px; color: #9ca3af;">معرف اللاعب (Player ID)</label>
-            <input type="text" id="modalPlayerId" placeholder="مثال: 512345678" style="width:100%; padding:7px; background:#1f2937; border:1px solid #374151; color:white; border-radius:6px; margin-top:3px; font-size:12px;">
-        </div>
-
-        <div style="margin-bottom: 10px;">
-            <label style="font-size: 11px; color: #9ca3af;">اختر طريقة الدفع</label>
-            <div class="payment-method-card selected" onclick="selectPayment(this)">
-                <span>محافظ كاش (فودافون / أورانج / اتصالات)</span>
-                <span style="font-weight: bold; color: #60a5fa;">01012345678</span>
+            <div class="auth-tabs hidden">
+                <button
+                    id="memberTab"
+                    class="auth-tab active"
+                    onclick="showAuth('member')">
+                    عضو
+                </button>
+                <button
+                    id="ownerTab"
+                    class="auth-tab"
+                    onclick="showAuth('owner')">
+                    المالك
+                </button>
             </div>
-            <div class="payment-method-card" onclick="selectPayment(this)">
-                <span>خدمة فوري (Fawry Pay)</span>
-                <span style="font-size: 10px; color: #10b981;">متاح فوراً</span>
+
+            <div id="memberAuth">
+
+                <div class="field">
+                    <label>كود الدعوة (أو أدخل كود المالك   هنا</label>
+                    <input
+                        id="inviteInput"
+                        class="input"
+                        placeholder="مثال: NG-7K9P2 أو كود المالك"
+                        autocomplete="off">
+                </div>
+
+                <button class="primary" onclick="enterWithInvite()">
+                    دخول للمجتمع
+                </button>
+
+                <div class="auth-note">
+                    لا يوجد تسجيل بالبريد الإلكتروني أو رقم الهاتف.
+                    <br>
+                    تحتاج إلى كود دعوة صالح أو كود المالك السري.
+                </div>
+
             </div>
+
+            <div id="ownerAuth" class="hidden">
+
+                <div class="field">
+                    <label>كود المالك</label>
+
+                    <input
+                        id="ownerInput"
+                        class="input"
+                        type="password"
+                        placeholder="أدخل كود المالك"
+                        inputmode="numeric">
+                </div>
+
+                <button class="primary" onclick="enterOwner()">
+                    👑 دخول لوحة المالك
+                </button>
+
+                <div class="owner-box">
+                    <strong>وضع المالك</strong>
+                    <br>
+                    كود المالك الافتراضي في هذه النسخة:
+                    <strong>2009</strong>
+                </div>
+
+            </div>
+
         </div>
 
-        <div style="margin-bottom: 10px;">
-            <label style="font-size: 11px; color: #9ca3af;">رقم الهاتف المحول منه</label>
-            <input type="tel" id="modalPhone" placeholder="رقم هاتفك للتحقق" style="width:100%; padding:7px; background:#1f2937; border:1px solid #374151; color:white; border-radius:6px; margin-top:3px; font-size:12px;">
-        </div>
-
-        <div style="margin-bottom: 12px;">
-            <label style="font-size: 11px; color: #9ca3af;">إرفاق صورة إيصال التحويل</label>
-            <input type="file" id="receiptFile" accept="image/*" style="width:100%; padding:5px; background:#1f2937; border:1px solid #374151; color:white; border-radius:6px; margin-top:3px; font-size:11px;">
-        </div>
-
-        <button class="buy-btn" style="padding: 9px; font-size: 13px;" onclick="confirmOrder()">تأكيد الشحن الآن</button>
     </div>
 
-    <!-- نافذة الإعلان المنبثق بالفيديو -->
-    <div class="ad-modal" id="adModal">
-        <div class="ad-content">
-            <button class="skip-btn" id="skipBtn" style="display:none;" onclick="closeAd()">تخطي (5s)</button>
-            <video id="adVideo" src="n.mp4" autoplay muted onclick="onAdVideoClick()"></video>
-            <div class="ad-description">🔥 عرض خاص ومحدود! اضغط على الفيديو للانتقال فوراً 🔥</div>
+</div>
+
+<div id="app" class="hidden">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-head">
+
+            <div class="brand-row">
+
+                <div class="brand">
+
+                    <div class="brand-logo">N</div>
+
+                    <div>
+                        <div class="brand-name">NEGM CHAT</div>
+                        <div class="brand-sub">PRIVATE COMMUNITY</div>
+                    </div>
+
+                </div>
+
+                <div style="display: flex; gap: 6px;">
+                    <button class="icon-btn" onclick="openAIAssistant()" title="تحدث مع AI">🤖</button>
+                    <button class="icon-btn" onclick="openNotifications()">🔔</button>
+                </div>
+
+            </div>
+
+            <div class="search-box">
+
+                <span class="search-icon">⌕</span>
+
+                <input
+                    id="chatSearch"
+                    class="input"
+                    placeholder="ابحث بالاسم (مثال: أحمد، محمد)..."
+                    oninput="renderChats()">
+
+            </div>
+
         </div>
+
+        <div class="chat-list" id="chatList"></div>
+
+        <div class="mobile-nav">
+
+            <button
+                class="active"
+                onclick="mobileSection('chats')">
+                💬
+            </button>
+
+            <button onclick="openGroups()">👥</button>
+            <button onclick="openAIAssistant()">🤖</button>
+            <button onclick="openNotifications()">🔔</button>
+
+            <button onclick="openProfile()">👤</button>
+
+        </div>
+
+        <div class="sidebar-bottom">
+
+            <div
+                class="profile-mini"
+                onclick="openProfile()">
+
+                <div class="avatar" id="miniAvatar"></div>
+
+                <div class="profile-mini-info">
+
+                    <div
+                        class="profile-mini-name"
+                        id="miniName">
+                        —
+                    </div>
+
+                    <div class="profile-mini-status">
+                        ● متصل الآن
+                    </div>
+
+                </div>
+
+                <span>›</span>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+    <main class="chat-area">
+
+        <div
+            id="emptyChat"
+            class="empty-chat">
+
+            <div class="empty-icon">💬</div>
+
+            <h2>ابدأ المحادثة</h2>
+
+            <p>
+                اختر شخصًا من قائمة المحادثات
+                أو تحدث مع مساعد الذكاء الاصطناعي 🤖
+            </p>
+
+        </div>
+
+        <div
+            id="chatView"
+            class="hidden"
+            style="height:100%;display:flex;flex-direction:column;">
+
+            <header class="chat-header">
+
+                <button
+                    class="icon-btn back-mobile"
+                    onclick="closeMobileChat()">
+                    ←
+                </button>
+
+                <div
+                    class="avatar"
+                    id="chatAvatar">
+                </div>
+
+                <div class="chat-head-info">
+
+                    <div
+                        class="chat-head-name"
+                        id="chatName">
+                        —
+                    </div>
+
+                    <div
+                        class="chat-head-status"
+                        id="chatStatus">
+                        —
+                    </div>
+
+                </div>
+
+                <div class="chat-actions">
+
+                    <button
+                        class="icon-btn optional-mobile"
+                        onclick="startFakeCall('audio')">
+                        📞
+                    </button>
+
+                    <button
+                        class="icon-btn optional-mobile"
+                        onclick="startFakeCall('video')">
+                        🎥
+                    </button>
+
+                    <button
+                        class="icon-btn"
+                        onclick="chatInfo()">
+                        ⋮
+                    </button>
+
+                </div>
+
+            </header>
+
+            <div
+                class="messages"
+                id="messages">
+            </div>
+
+            <div
+                class="typing"
+                id="typing">
+            </div>
+
+            <div class="composer">
+
+                <div
+                    id="replyBar"
+                    class="reply-bar hidden">
+
+                    <div class="reply-bar-info">
+
+                        <div class="reply-bar-title">
+                            الرد على رسالة
+                        </div>
+
+                        <div
+                            id="replyText"
+                            class="reply-bar-text">
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="close"
+                        onclick="cancelReply()">
+                        ×
+                    </button>
+
+                </div>
+
+                <div class="composer-row">
+
+                    <button
+                        class="attach-btn"
+                        onclick="chooseImage()">
+                        ＋
+                    </button>
+
+                    <div class="compose-input-wrap">
+
+                        <textarea
+                            id="messageInput"
+                            class="compose-input"
+                            placeholder="اكتب رسالة..."
+                            rows="1"
+                            oninput="handleTyping()"
+                            onkeydown="messageKey(event)">
+                        </textarea>
+
+                    </div>
+
+                    <button
+                        id="recordBtn"
+                        class="record-btn"
+                        onclick="toggleRecording()">
+                        🎙️
+                    </button>
+
+                    <button
+                        class="send-btn"
+                        onclick="sendMessage()">
+                        ➤
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<input
+    id="imageInput"
+    type="file"
+    accept="image/*"
+    class="hidden"
+    onchange="handleImage(event)">
+
+<div
+    id="profileModal"
+    class="modal hidden">
+
+    <div class="modal-card">
+
+        <div class="modal-head">
+
+            <div class="modal-title">
+                الملف الشخصي
+            </div>
+
+            <button
+                class="close"
+                onclick="closeModal('profileModal')">
+                ×
+            </button>
+
+        </div>
+
+        <div class="profile-large">
+
+            <div
+                class="avatar"
+                id="profileAvatar">
+            </div>
+
+            <div class="avatar-picker">
+
+                <label class="secondary" style="padding:12px 20px;border-radius:13px;">
+                    📷 تغيير الصورة
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onchange="changeProfileImage(event)">
+                </label>
+
+            </div>
+
+            <div class="field">
+
+                <label>الاسم</label>
+
+                <input
+                    id="profileName"
+                    class="input">
+
+            </div>
+
+            <div class="field">
+
+                <label>الوصف</label>
+
+                <textarea
+                    id="profileBio"
+                    class="input"
+                    style="height:100px;padding-top:12px;resize:none;">
+                </textarea>
+
+            </div>
+
+            <button
+                class="primary"
+                onclick="saveProfile()">
+                حفظ التغييرات
+            </button>
+
+        </div>
+
     </div>
 
-    <div class="overlay" id="overlay" onclick="closeModal()"></div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+<div
+    id="ownerModal"
+    class="modal hidden">
 
-        const firebaseConfig = {
-            databaseURL: "https://negm-2fde0-default-rtdb.firebaseio.com/"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+    <div class="modal-card">
 
-        const packages = [
-            { uc: "60 UC", official: 50.99, desc: "تنزيل 10ج" },
-            { uc: "300 + 25 UC", official: 254.99, desc: "تنزيل 15ج" },
-            { uc: "600 + 60 UC", official: 509.99, desc: "تنزيل 30ج" },
-            { uc: "1500 + 300 UC", official: 1274.99, desc: "تنزيل 75ج" },
-            { uc: "3000 + 850 UC", official: 2549.99, desc: "تنزيل 150ج" },
-            { uc: "6000 + 2100 UC", official: 5099.99, desc: "تنزيل 300ج" },
-            { uc: "12000 + 4200 UC", official: 10199.99, desc: "تنزيل 400ج" },
-            { uc: "18000 + 6300 UC", official: 15299.99, desc: "تنزيل 450ج" },
-            { uc: "30000 + 10500 UC", official: 25499.99, desc: "تنزيل 500ج" },
-            { uc: "60000 + 21000 UC", official: 50999.99, desc: "تنزيل 500ج" }
-        ];
+        <div class="modal-head">
 
-        function calculateDiscountedPrice(official) {
-            if (official >= 25000) return official - 500;
-            if (official >= 10000) return official - 400;
-            if (official >= 5000) return official - 300;
-            if (official >= 2000) return official - 150;
-            if (official >= 1000) return official - 75;
-            if (official >= 500) return official - 30;
-            return official - 10;
+            <div class="modal-title">
+                👑 لوحة المالك
+            </div>
+
+            <button
+                class="close"
+                onclick="closeModal('ownerModal')">
+                ×
+            </button>
+
+        </div>
+
+        <div class="admin-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon">👤</div>
+                <div
+                    class="stat-value"
+                    id="statUsers">
+                    0
+                </div>
+                <div class="stat-label">
+                    المستخدمون
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🎟️</div>
+                <div
+                    class="stat-value"
+                    id="statInvites">
+                    0
+                </div>
+                <div class="stat-label">
+                    الدعوات
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">✓</div>
+                <div
+                    class="stat-value"
+                    id="statVerified">
+                    0
+                </div>
+                <div class="stat-label">
+                    موثقون
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">💬</div>
+                <div
+                    class="stat-value"
+                    id="statMessages">
+                    0
+                </div>
+                <div class="stat-label">
+                    الرسائل
+                </div>
+            </div>
+
+        </div>
+
+        <div class="admin-section">
+
+            <h3>🎟️ إنشاء كود دعوة</h3>
+
+            <div class="field">
+
+                <label>اسم الشخص</label>
+
+                <input
+                    id="inviteName"
+                    class="input"
+                    placeholder="اسم العضو">
+
+            </div>
+
+            <div class="field">
+
+                <label>الصورة الشخصية</label>
+
+                <input
+                    id="inviteAvatar"
+                    type="file"
+                    class="input"
+                    accept="image/*"
+                    style="padding-top:13px">
+
+            </div>
+
+            <button
+                class="primary"
+                onclick="createInvite()">
+                ✨ إنشاء الدعوة
+            </button>
+
+        </div>
+
+        <div class="admin-section">
+
+            <h3>👥 المستخدمون</h3>
+
+            <div id="adminUsers"></div>
+
+        </div>
+
+        <div class="admin-section">
+
+            <h3>🎟️ الدعوات</h3>
+
+            <div id="adminInvites"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div
+    id="notificationsModal"
+    class="modal hidden">
+
+    <div class="modal-card">
+
+        <div class="modal-head">
+
+            <div class="modal-title">
+                🔔 الإشعارات
+            </div>
+
+            <button
+                class="close"
+                onclick="closeModal('notificationsModal')">
+                ×
+            </button>
+
+        </div>
+
+        <div id="notificationsList"></div>
+
+    </div>
+
+</div>
+
+<div
+    id="groupsModal"
+    class="modal hidden">
+
+    <div class="modal-card">
+
+        <div class="modal-head">
+
+            <div class="modal-title">
+                👥 المجموعات
+            </div>
+
+            <button
+                class="close"
+                onclick="closeModal('groupsModal')">
+                ×
+            </button>
+
+        </div>
+
+        <div class="field">
+
+            <label>اسم المجموعة</label>
+
+            <input
+                id="groupName"
+                class="input"
+                placeholder="مثال: فريق العمل">
+
+        </div>
+
+        <button
+            class="primary"
+            onclick="createGroup()">
+            إنشاء مجموعة
+        </button>
+
+        <div
+            id="groupsList"
+            style="margin-top:15px;">
+        </div>
+
+    </div>
+
+</div>
+
+<div
+    id="contextMenu"
+    class="context-menu hidden">
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   NEGM CHAT ENGINE
+   SINGLE FILE
+========================================================= */
+
+/* =========================
+   CONFIG
+========================= */
+
+const FIREBASE_URL =
+"https://nanaa-1f1a5-default-rtdb.europe-west1.firebasedatabase.app";
+
+const OWNER_CODE = "2009";
+
+/* مفتاح الذكاء الاصطناعي المدمج */
+const HF_API_KEY = "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";
+const HF_MODEL_URL = "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1";
+
+let DEMO_MODE = false;
+
+/* =========================
+   STATE
+========================= */
+
+const state = {
+
+    currentUser:null,
+    isOwner:false,
+
+    users:{},
+    invites:{},
+    chats:{},
+    messages:{},
+    groups:{},
+    notifications:[],
+
+    activeChat:null,
+    replyTo:null,
+
+    recording:false,
+    mediaRecorder:null,
+    audioChunks:[],
+
+    typingTimer:null
+
+};
+
+/* =========================
+   HELPERS
+========================= */
+
+function $(id){
+    return document.getElementById(id);
+}
+
+function escapeHTML(value){
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+function uid(prefix="id"){
+    return prefix+"_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8);
+}
+
+function now(){
+    return Date.now();
+}
+
+function timeText(timestamp){
+    const d = new Date(timestamp || now());
+
+    return d.toLocaleTimeString("ar-EG",{
+        hour:"2-digit",
+        minute:"2-digit"
+    });
+}
+
+function dateText(timestamp){
+    const d = new Date(timestamp || now());
+
+    return d.toLocaleDateString("ar-EG",{
+        day:"numeric",
+        month:"long"
+    });
+}
+
+function toast(text){
+    const el = $("toast");
+
+    el.textContent = text;
+    el.classList.add("show");
+
+    clearTimeout(toast.timer);
+
+    toast.timer =
+        setTimeout(()=>{
+            el.classList.remove("show");
+        },2500);
+}
+
+function closeModal(id){
+    $(id).classList.add("hidden");
+}
+
+function openModal(id){
+    $(id).classList.remove("hidden");
+}
+
+/* =========================
+   LOCAL STORAGE
+========================= */
+
+function saveLocal(){
+
+    localStorage.setItem(
+        "negm_chat_state",
+        JSON.stringify({
+            users:state.users,
+            invites:state.invites,
+            chats:state.chats,
+            messages:state.messages,
+            groups:state.groups,
+            notifications:state.notifications
+        })
+    );
+
+}
+
+function loadLocal(){
+
+    try{
+
+        const raw =
+            localStorage.getItem("negm_chat_state");
+
+        if(!raw) return;
+
+        const data =
+            JSON.parse(raw);
+
+        state.users =
+            data.users || {};
+
+        state.invites =
+            data.invites || {};
+
+        state.chats =
+            data.chats || {};
+
+        state.messages =
+            data.messages || {};
+
+        state.groups =
+            data.groups || {};
+
+        state.notifications =
+            data.notifications || [];
+
+    }catch(e){
+
+        console.warn(e);
+
+    }
+
+}
+
+/* =========================
+   FIREBASE REST
+========================= */
+
+async function firebaseRequest(
+    path,
+    method="GET",
+    body=null
+){
+
+    try{
+
+        const response =
+            await fetch(
+                FIREBASE_URL + "/" + path + ".json",
+                {
+                    method,
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:
+                        body === null
+                        ? null
+                        : JSON.stringify(body)
+                }
+            );
+
+        if(!response.ok){
+            throw new Error(
+                "Firebase HTTP "+response.status
+            );
         }
 
-        const grid = document.getElementById('packagesGrid');
-        packages.forEach(pkg => {
-            const finalPrice = calculateDiscountedPrice(pkg.official);
-            grid.innerHTML += `
-                <div class="card">
-                    <span class="discount-badge">${pkg.desc}</span>
-                    <img src="level2.f2b27a84.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/8157/8157138.png'" alt="UC">
-                    <div class="card-title">${pkg.uc}</div>
-                    <div class="old-price">EGP ${pkg.official.toFixed(2)}</div>
-                    <div class="new-price">EGP ${finalPrice.toFixed(2)}</div>
-                    <button class="buy-btn" onclick="openModal('${pkg.uc}', '${finalPrice.toFixed(2)}')">شراء ودفع</button>
+        return await response.json();
+
+    }catch(error){
+
+        console.warn(
+            "Firebase unavailable:",
+            error
+        );
+
+        DEMO_MODE = true;
+
+        return null;
+
+    }
+
+}
+
+async function fbSet(path,value){
+
+    const result =
+        await firebaseRequest(
+            path,
+            "PUT",
+            value
+        );
+
+    saveLocal();
+
+    return result;
+
+}
+
+async function fbPatch(path,value){
+
+    const result =
+        await firebaseRequest(
+            path,
+            "PATCH",
+            value
+        );
+
+    saveLocal();
+
+    return result;
+
+}
+
+async function fbGet(path){
+
+    return await firebaseRequest(
+        path,
+        "GET"
+    );
+
+}
+
+/* =========================
+   DATABASE INIT
+========================= */
+
+async function initializeDatabase(){
+
+    loadLocal();
+
+    const data =
+        await fbGet("negmChat");
+
+    if(data){
+
+        state.users =
+            data.users || state.users;
+
+        state.invites =
+            data.invites || state.invites;
+
+        state.chats =
+            data.chats || state.chats;
+
+        state.messages =
+            data.messages || state.messages;
+
+        state.groups =
+            data.groups || state.groups;
+
+        state.notifications =
+            data.notifications || state.notifications;
+
+        saveLocal();
+
+    }
+
+    seedDemoData();
+
+}
+
+/* =========================
+   DEMO DATA
+========================= */
+
+function seedDemoData(){
+
+    if(Object.keys(state.users).length === 0){
+
+        state.users = {};
+
+        const owner = {
+
+            id:"owner",
+
+            name:"مالك NEGM",
+
+            username:"@owner",
+
+            bio:"مالك المجتمع • إدارة NEGM CHAT",
+
+            avatar:"",
+
+            verified:true,
+
+            owner:true,
+
+            online:true,
+
+            lastSeen:now(),
+
+            createdAt:now()
+
+        };
+
+        const aiBot = {
+            id:"ai_assistant_bot",
+            name:"مساعد NEGM الذكي",
+            username:"@ai_bot",
+            bio:"مساعد الذكاء الاصطناعي الخاص بك لتلبية كافة مهامك وتساؤلاتك",
+            avatar:"",
+            verified:true,
+            owner:false,
+            online:true,
+            lastSeen:now(),
+            createdAt:now(),
+            isAI:true
+        };
+
+        const u1 = {
+
+            id:"demo_ahmed",
+
+            name:"أحمد محمد",
+
+            username:"@ahmed",
+
+            bio:"مصمم ومبرمج",
+
+            avatar:"",
+
+            verified:true,
+
+            owner:false,
+
+            online:true,
+
+            lastSeen:now(),
+
+            createdAt:now()
+
+        };
+
+        const u2 = {
+
+            id:"demo_mohamed",
+
+            name:"محمد",
+
+            username:"@mohamed",
+
+            bio:"صانع محتوى",
+
+            avatar:"",
+
+            verified:false,
+
+            owner:false,
+
+            online:false,
+
+            lastSeen:now()-3600000,
+
+            createdAt:now()
+
+        };
+
+        const u3 = {
+
+            id:"demo_sara",
+
+            name:"سارة",
+
+            username:"@sara",
+
+            bio:"مصممة",
+
+            avatar:"",
+
+            verified:false,
+
+            owner:false,
+
+            online:false,
+
+            lastSeen:now()-7200000,
+
+            createdAt:now()
+
+        };
+
+        state.users.owner = owner;
+        state.users.ai_assistant_bot = aiBot;
+        state.users.demo_ahmed = u1;
+        state.users.demo_mohamed = u2;
+        state.users.demo_sara = u3;
+
+    } else if(!state.users.ai_assistant_bot) {
+        state.users.ai_assistant_bot = {
+            id:"ai_assistant_bot",
+            name:"مساعد NEGM الذكي",
+            username:"@ai_bot",
+            bio:"مساعد الذكاء الاصطناعي الخاص بك",
+            avatar:"",
+            verified:true,
+            owner:false,
+            online:true,
+            lastSeen:now(),
+            createdAt:now(),
+            isAI:true
+        };
+    }
+
+    if(Object.keys(state.invites).length === 0){
+
+        state.invites = {
+
+            "NG-DEMO":{
+
+                code:"NG-DEMO",
+
+                name:"عضو تجريبي",
+
+                avatar:"",
+
+                active:true,
+
+                used:false,
+
+                createdAt:now()
+
+            }
+
+        };
+
+    }
+
+    saveLocal();
+
+}
+
+/* =========================
+   AUTH
+========================= */
+
+function showAuth(type){
+
+    if(type==="member"){
+
+        $("memberAuth")
+            .classList.remove("hidden");
+
+        $("ownerAuth")
+            .classList.add("hidden");
+
+        $("memberTab")
+            .classList.add("active");
+
+        $("ownerTab")
+            .classList.remove("active");
+
+    }else{
+
+        $("memberAuth")
+            .classList.add("hidden");
+
+        $("ownerAuth")
+            .classList.remove("hidden");
+
+        $("memberTab")
+            .classList.remove("active");
+
+        $("ownerTab")
+            .classList.add("active");
+
+    }
+
+}
+
+async function enterOwner(){
+
+    const code =
+        $("ownerInput").value.trim();
+
+    if(code !== OWNER_CODE){
+
+        toast("❌ كود المالك غير صحيح");
+
+        return;
+
+    }
+
+    let owner =
+        state.users.owner;
+
+    if(!owner){
+
+        owner = {
+
+            id:"owner",
+
+            name:"مالك NEGM",
+
+            username:"@owner",
+
+            bio:"مالك المجتمع • إدارة NEGM CHAT",
+
+            avatar:"",
+
+            verified:true,
+
+            owner:true,
+
+            online:true,
+
+            lastSeen:now(),
+
+            createdAt:now()
+
+        };
+
+        state.users.owner = owner;
+
+    }
+
+    state.currentUser = owner;
+    state.isOwner = true;
+
+    localStorage.setItem(
+        "negm_current_user",
+        "owner"
+    );
+
+    await fbPatch(
+        "negmChat/users",
+        {
+            owner:owner
+        }
+    );
+
+    openApp();
+
+    setTimeout(
+        openOwnerPanel,
+        400
+    );
+
+}
+
+async function enterWithInvite(){
+
+    const codeInput =
+        $("inviteInput")
+            .value
+            .trim();
+
+    const code = codeInput.toUpperCase();
+
+    // التحقق الفوري هل كتب المستخدم كود المالك مباشرةً في نفس حقل الدخول لإخفائه عن العامة تماماً
+    if(codeInput === OWNER_CODE){
+        enterOwnerDirectly();
+        return;
+    }
+
+    if(!code){
+
+        toast("اكتب كود الدعوة");
+
+        return;
+
+    }
+
+    const invite =
+        state.invites[code];
+
+    if(!invite || !invite.active){
+
+        toast("❌ كود الدعوة غير صالح");
+
+        return;
+
+    }
+
+    let user = Object.values(
+        state.users
+    ).find(
+        u =>
+            u.inviteCode === code
+    );
+
+    if(!user){
+
+        user = {
+
+            id:uid("user"),
+
+            name:
+                invite.name ||
+                "عضو جديد",
+
+            username:
+                "@user"+
+                Math.floor(
+                    Math.random()*99999
+                ),
+
+            bio:"",
+
+            avatar:
+                invite.avatar || "",
+
+            inviteCode:code,
+
+            verified:false,
+
+            owner:false,
+
+            online:true,
+
+            lastSeen:now(),
+
+            createdAt:now()
+
+        };
+
+        state.users[user.id] =
+            user;
+
+        state.invites[code].used =
+            true;
+
+        await fbPatch(
+            "negmChat",
+            {
+                users:{
+                    [user.id]:user
+                },
+                invites:{
+                    [code]:state.invites[code]
+                }
+            }
+        );
+
+    }else{
+
+        user.online = true;
+        user.lastSeen = now();
+
+    }
+
+    state.currentUser = user;
+    state.isOwner = false;
+
+    localStorage.setItem(
+        "negm_current_user",
+        user.id
+    );
+
+    saveLocal();
+
+    openApp();
+
+    if(
+        !user.bio &&
+        user.name === invite.name
+    ){
+
+        setTimeout(
+            openProfile,
+            350
+        );
+
+    }
+
+}
+
+async function enterOwnerDirectly(){
+    let owner = state.users.owner;
+    if(!owner){
+        owner = {
+            id:"owner",
+            name:"مالك NEGM",
+            username:"@owner",
+            bio:"مالك المجتمع",
+            avatar:"",
+            verified:true,
+            owner:true,
+            online:true,
+            lastSeen:now(),
+            createdAt:now()
+        };
+        state.users.owner = owner;
+    }
+    state.currentUser = owner;
+    state.isOwner = true;
+    localStorage.setItem("negm_current_user", "owner");
+    openApp();
+    setTimeout(openOwnerPanel, 400);
+}
+
+/* =========================
+   APP OPEN
+========================= */
+
+function openApp(){
+
+    $("auth")
+        .classList.add("hidden");
+
+    $("app")
+        .classList.remove("hidden");
+
+    updateMiniProfile();
+
+    renderChats();
+
+    if(state.isOwner){
+
+        addOwnerShortcut();
+
+    }
+
+}
+
+function addOwnerShortcut(){
+
+    const list =
+        $("chatList");
+
+    if(
+        document.getElementById(
+            "ownerShortcut"
+        )
+    ) return;
+
+    const div =
+        document.createElement("div");
+
+    div.id = "ownerShortcut";
+
+    div.innerHTML = `
+        <div
+          class="chat-item"
+          style="background:linear-gradient(135deg,rgba(108,92,231,.15),rgba(143,124,255,.06));margin:5px 0"
+          onclick="openOwnerPanel()">
+
+          <div class="avatar"
+               style="background:linear-gradient(135deg,#ffc857,#ff9f43)">
+              👑
+          </div>
+
+          <div class="chat-info">
+
+            <div class="chat-name">
+              لوحة المالك
+            </div>
+
+            <div class="chat-preview">
+              إدارة الأعضاء والدعوات والتوثيق
+            </div>
+
+          </div>
+
+        </div>
+    `;
+
+    list.prepend(div);
+
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+function avatarHTML(user){
+
+    if(
+        user &&
+        user.avatar
+    ){
+
+        return `
+            <img
+                src="${user.avatar}"
+                alt="">
+        `;
+
+    }
+
+    if(user && user.isAI){
+        return "🤖";
+    }
+
+    const letter =
+        user &&
+        user.name
+        ? user.name.charAt(0)
+        : "N";
+
+    return escapeHTML(letter);
+
+}
+
+function updateMiniProfile(){
+
+    const user =
+        state.currentUser;
+
+    if(!user) return;
+
+    $("miniAvatar")
+        .innerHTML =
+        avatarHTML(user);
+
+    $("miniName")
+        .textContent =
+        user.name;
+
+}
+
+function openProfile(){
+
+    const user =
+        state.currentUser;
+
+    if(!user) return;
+
+    $("profileAvatar")
+        .innerHTML =
+        avatarHTML(user);
+
+    $("profileName")
+        .value =
+        user.name || "";
+
+    $("profileBio")
+        .value =
+        user.bio || "";
+
+    openModal("profileModal");
+
+}
+
+async function saveProfile(){
+
+    const user =
+        state.currentUser;
+
+    if(!user) return;
+
+    const name =
+        $("profileName")
+            .value
+            .trim();
+
+    const bio =
+        $("profileBio")
+            .value
+            .trim();
+
+    if(!name){
+
+        toast("اكتب اسمك");
+
+        return;
+
+    }
+
+    user.name = name;
+    user.bio = bio;
+    user.online = true;
+    user.lastSeen = now();
+
+    state.users[user.id] =
+        user;
+
+    await fbPatch(
+        "negmChat/users/"+user.id,
+        user
+    );
+
+    saveLocal();
+
+    updateMiniProfile();
+
+    renderChats();
+
+    if(state.activeChat)
+        renderChat();
+
+    closeModal("profileModal");
+
+    toast("✓ تم تحديث الملف الشخصي");
+
+}
+
+async function changeProfileImage(event){
+
+    const file =
+        event.target.files[0];
+
+    if(!file) return;
+
+    try{
+
+        toast("جاري ضغط الصورة...");
+
+        const data =
+            await compressImage(
+                file,
+                512,
+                .72
+            );
+
+        state.currentUser.avatar =
+            data;
+
+        $("profileAvatar")
+            .innerHTML =
+            `<img src="${data}" alt="">`;
+
+        toast("✓ تم تجهيز الصورة");
+
+    }catch(e){
+
+        toast("تعذر قراءة الصورة");
+
+    }
+
+}
+
+/* =========================
+   IMAGE COMPRESSION
+========================= */
+
+function compressImage(
+    file,
+    maxSize=512,
+    quality=.72
+){
+
+    return new Promise(
+        (resolve,reject)=>{
+
+            const reader =
+                new FileReader();
+
+            reader.onload = e => {
+
+                const img =
+                    new Image();
+
+                img.onload = () => {
+
+                    let w =
+                        img.width;
+
+                    let h =
+                        img.height;
+
+                    if(
+                        w > maxSize ||
+                        h > maxSize
+                    ){
+
+                        const ratio =
+                            Math.min(
+                                maxSize/w,
+                                maxSize/h
+                            );
+
+                        w =
+                            Math.round(
+                                w*ratio
+                            );
+
+                        h =
+                            Math.round(
+                                h*ratio
+                            );
+
+                    }
+
+                    const canvas =
+                        document.createElement(
+                            "canvas"
+                        );
+
+                    canvas.width = w;
+                    canvas.height = h;
+
+                    const ctx =
+                        canvas.getContext(
+                            "2d"
+                        );
+
+                    ctx.drawImage(
+                        img,
+                        0,
+                        0,
+                        w,
+                        h
+                    );
+
+                    resolve(
+                        canvas.toDataURL(
+                            "image/jpeg",
+                            quality
+                        )
+                    );
+
+                };
+
+                img.onerror =
+                    reject;
+
+                img.src =
+                    e.target.result;
+
+            };
+
+            reader.onerror =
+                reject;
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+}
+
+/* =========================
+   CHATS & SEARCH (البحث بالاسم)
+========================= */
+
+function chatIdFor(a,b){
+
+    return [a,b]
+        .sort()
+        .join("_");
+
+}
+
+function getChatUsers(){
+
+    if(!state.currentUser)
+        return [];
+
+    return Object.values(
+        state.users
+    ).filter(
+        u =>
+            u.id !==
+            state.currentUser.id &&
+            !u.banned
+    );
+
+}
+
+function renderChats(){
+
+    const list =
+        $("chatList");
+
+    const query =
+        $("chatSearch")
+            ? $("chatSearch")
+                .value
+                .toLowerCase()
+                .trim()
+            : "";
+
+    if(
+        document.getElementById(
+            "ownerShortcut"
+        )
+    ){
+
+        document.getElementById(
+            "ownerShortcut"
+        ).remove();
+
+    }
+
+    list.innerHTML = "";
+
+    if(state.isOwner)
+        addOwnerShortcut();
+
+    // تصفية المحادثات بحثاً بالاسم بدقة تامة (مثل أحمد، محمد، إلخ...)
+    const users =
+        getChatUsers()
+        .filter(
+            u =>
+                !query ||
+                u.name
+                    .toLowerCase()
+                    .includes(query) ||
+                (u.username || "")
+                    .toLowerCase()
+                    .includes(query)
+        );
+
+    if(users.length){
+
+        const title =
+            document.createElement("div");
+
+        title.className =
+            "section-title";
+
+        title.textContent =
+            "المحادثات";
+
+        list.appendChild(title);
+
+    }
+
+    users.forEach(
+        user => {
+
+            const chatId =
+                chatIdFor(
+                    state.currentUser.id,
+                    user.id
+                );
+
+            const msgs =
+                state.messages[chatId]
+                ? Object.values(
+                    state.messages[chatId]
+                ).sort(
+                    (a,b)=>
+                        b.createdAt-a.createdAt
+                )
+                : [];
+
+            const last =
+                msgs[0];
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "chat-item"+
+                (
+                    state.activeChat === user.id
+                    ? " active"
+                    : ""
+                );
+
+            div.onclick =
+                () => openChat(user.id);
+
+            const verified =
+                user.verified
+                ? `<span class="verified">✓</span>`
+                : "";
+
+            div.innerHTML = `
+
+                <div class="avatar">
+
+                    ${avatarHTML(user)}
+
+                    ${
+                        user.online
+                        ? `<span class="online-dot"></span>`
+                        : ""
+                    }
+
+                </div>
+
+                <div class="chat-info">
+
+                    <div class="chat-top">
+
+                        <div class="chat-name">
+
+                            ${escapeHTML(user.name)}
+
+                            ${verified}
+
+                        </div>
+
+                        <div class="chat-time">
+                            ${
+                                last
+                                ? timeText(last.createdAt)
+                                : ""
+                            }
+                        </div>
+
+                    </div>
+
+                    <div class="chat-preview">
+
+                        ${
+                            last
+                            ? escapeHTML(
+                                last.text ||
+                                (
+                                    last.type==="image"
+                                    ? "📷 صورة"
+                                    : "🎙️ تسجيل صوتي"
+                                )
+                              )
+                            : (user.isAI ? "انقر لبدء التحدث مع المساعد الذكي" : "ابدأ المحادثة")
+                        }
+
+                    </div>
+
+                </div>
+
+            `;
+
+            list.appendChild(div);
+
+        }
+    );
+
+}
+
+/* =========================
+   OPEN CHAT
+========================= */
+
+function openChat(userId){
+
+    const user =
+        state.users[userId];
+
+    if(!user) return;
+
+    state.activeChat =
+        userId;
+
+    $("emptyChat")
+        .classList.add("hidden");
+
+    $("chatView")
+        .classList.remove("hidden");
+
+    $("chatName")
+        .innerHTML =
+        escapeHTML(user.name)+
+        (
+            user.verified
+            ? ` <span class="verified">✓</span>`
+            : ""
+        );
+
+    $("chatStatus")
+        .textContent =
+        user.isAI
+        ? "🤖 مساعد ذكي متاح 24/7"
+        : (user.online ? "● متصل الآن" : "آخر ظهور "+timeText(user.lastSeen));
+
+    $("chatAvatar")
+        .innerHTML =
+        avatarHTML(user);
+
+    renderMessages();
+
+    $("app")
+        .classList.add(
+            "mobile-chat-open"
+        );
+
+}
+
+function openAIAssistant(){
+    openChat("ai_assistant_bot");
+}
+
+/* =========================
+   CLOSE MOBILE CHAT
+========================= */
+
+function closeMobileChat(){
+
+    $("app")
+        .classList.remove(
+            "mobile-chat-open"
+        );
+
+}
+
+/* =========================
+   RENDER MESSAGES
+========================= */
+
+function renderMessages(){
+
+    const container =
+        $("messages");
+
+    container.innerHTML = "";
+
+    if(!state.currentUser ||
+       !state.activeChat){
+
+        return;
+
+    }
+
+    const chatId =
+        chatIdFor(
+            state.currentUser.id,
+            state.activeChat
+        );
+
+    const messages =
+        state.messages[chatId]
+        ? Object.values(
+            state.messages[chatId]
+        ).sort(
+            (a,b)=>
+                a.createdAt-b.createdAt
+        )
+        : [];
+
+    if(messages.length === 0){
+
+        container.innerHTML = `
+            <div class="day-separator">
+                <span>بداية المحادثة</span>
+            </div>
+        `;
+
+    }
+
+    let lastDay = "";
+
+    messages.forEach(
+        message => {
+
+            const day =
+                dateText(message.createdAt);
+
+            if(day !== lastDay){
+
+                const separator =
+                    document.createElement(
+                        "div"
+                    );
+
+                separator.className =
+                    "day-separator";
+
+                separator.innerHTML =
+                    `<span>${escapeHTML(day)}</span>`;
+
+                container.appendChild(
+                    separator
+                );
+
+                lastDay = day;
+
+            }
+
+            renderMessage(
+                container,
+                message
+            );
+
+        }
+    );
+
+    requestAnimationFrame(
+        ()=>{
+            container.scrollTop =
+                container.scrollHeight;
+        }
+    );
+
+}
+
+function renderMessage(
+    container,
+    message
+){
+
+    const mine =
+        message.senderId ===
+        state.currentUser.id;
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        "message-row "+
+        (mine ? "mine" : "theirs");
+
+    row.dataset.id =
+        message.id;
+
+    const bubble =
+        document.createElement("div");
+
+    bubble.className =
+        "message-bubble";
+
+    bubble.oncontextmenu =
+        e => {
+
+            e.preventDefault();
+
+            showMessageMenu(
+                e.clientX,
+                e.clientY,
+                message
+            );
+
+        };
+
+    let html = "";
+
+    if(message.replyTo){
+
+        const reply =
+            findMessage(
+                message.replyTo
+            );
+
+        if(reply){
+
+            html += `
+                <div class="reply-preview">
+
+                    ${escapeHTML(
+                        getUserName(
+                            reply.senderId
+                        )
+                    )}
+
+                    <br>
+
+                    ${escapeHTML(
+                        reply.text ||
+                        "رسالة"
+                    )}
+
                 </div>
             `;
-        });
 
-        let currentSelectedPkg = "";
-        let currentSelectedPrice = "";
-
-        window.openModal = function(item = 'شحن شدات', price = '0') {
-            currentSelectedPkg = item;
-            currentSelectedPrice = price;
-            const savedId = localStorage.getItem('saved_player_id') || "";
-            document.getElementById('modalPlayerId').value = savedId;
-            document.getElementById('checkoutModal').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-        };
-
-        window.closeModal = function() {
-            document.getElementById('checkoutModal').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-        };
-
-        window.confirmOrder = function() {
-            const pId = document.getElementById('modalPlayerId').value.trim();
-            const phone = document.getElementById('modalPhone').value.trim();
-            if(!pId || !phone) {
-                alert('الرجاء كتابة معرف اللاعب ورقم المحفظة للتحقق.');
-                return;
-            }
-            localStorage.setItem('saved_player_id', pId);
-            document.getElementById('savedPlayerIdText').innerText = "ID: " + pId;
-
-            const orderId = Date.now();
-            set(ref(db, 'orders/' + orderId), {
-                playerId: pId,
-                phone: phone,
-                package: currentSelectedPkg,
-                price: currentSelectedPrice,
-                timestamp: new Date().toISOString()
-            }).then(() => {
-                alert('تم تسجيل الطلب وإرساله إلى البوت @Felm_negmbot وجاري الشحن فوراً!');
-                closeModal();
-            });
-        };
-    </script>
-
-    <script>
-        const API_KEY = "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";
-        
-        function toggleAIChat() {
-            document.getElementById('aiChatBox').classList.toggle('active');
         }
 
-        async function sendAIMessage() {
-            const input = document.getElementById('aiInput');
-            const txt = input.value.trim();
-            if(!txt) return;
+    }
 
-            const msgs = document.getElementById('chatMessages');
-            msgs.innerHTML += `<div class="msg user">${txt}</div>`;
-            input.value = "";
-            msgs.scrollTop = msgs.scrollHeight;
+    if(message.type === "image"){
 
-            msgs.innerHTML += `<div class="msg bot" id="loadingMsg">جاري التفكير...</div>`;
+        html += `
+            <div class="media-message">
+                <img
+                    src="${message.media}"
+                    alt="image"
+                    onclick="previewImage('${message.media}')">
+            </div>
+        `;
 
-            try {
-                const response = await fetch("https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill", {
-                    headers: { Authorization: `Bearer ${API_KEY}` },
-                    method: "POST",
-                    body: JSON.stringify({ inputs: txt }),
+    }else if(message.type === "audio"){
+
+        html += `
+            <div class="audio-message">
+
+                <button
+                    class="audio-play"
+                    onclick="playAudio(this,'${message.media}')">
+                    ▶
+                </button>
+
+                <div class="audio-progress">
+                    🎙️ تسجيل صوتي
+                </div>
+
+            </div>
+        `;
+
+    }
+
+    if(message.text){
+
+        html += `
+            <div class="message-text">
+                ${escapeHTML(message.text)}
+            </div>
+        `;
+
+    }
+
+    html += `
+        <div class="message-meta">
+
+            <span>
+                ${timeText(message.createdAt)}
+            </span>
+
+            ${
+                mine
+                ? `<span class="seen">
+                    ✓✓
+                  </span>`
+                : ""
+            }
+
+        </div>
+    `;
+
+    if(message.reactions){
+
+        html += `<div class="reactions">`;
+
+        Object.entries(
+            message.reactions
+        ).forEach(
+            ([emoji,count])=>{
+
+                html += `
+                    <span class="reaction">
+                        ${emoji} ${count}
+                    </span>
+                `;
+
+            }
+        );
+
+        html += `</div>`;
+
+    }
+
+    bubble.innerHTML =
+        html;
+
+    row.appendChild(
+        bubble
+    );
+
+    container.appendChild(
+        row
+    );
+
+}
+
+/* =========================
+   MESSAGE HELPERS
+========================= */
+
+function getUserName(id){
+
+    return state.users[id]
+        ? state.users[id].name
+        : "مستخدم";
+
+}
+
+function findMessage(id){
+
+    for(
+        const chat of Object.values(
+            state.messages
+        )
+    ){
+
+        const found =
+            Object.values(chat)
+                .find(
+                    m =>
+                        m.id === id
+                );
+
+        if(found)
+            return found;
+
+    }
+
+    return null;
+
+}
+
+/* =========================
+   SEND MESSAGE & AI INTEGRATION
+========================= */
+
+async function sendMessage(){
+
+    if(!state.currentUser ||
+       !state.activeChat)
+        return;
+
+    const input =
+        $("messageInput");
+
+    const text =
+        input.value.trim();
+
+    if(!text) return;
+
+    const chatId =
+        chatIdFor(
+            state.currentUser.id,
+            state.activeChat
+        );
+
+    if(!state.messages[chatId])
+        state.messages[chatId] = {};
+
+    const message = {
+
+        id:uid("msg"),
+
+        senderId:
+            state.currentUser.id,
+
+        receiverId:
+            state.activeChat,
+
+        type:"text",
+
+        text:text,
+
+        replyTo:
+            state.replyTo
+            ? state.replyTo.id
+            : null,
+
+        createdAt:now(),
+
+        reactions:{}
+
+    };
+
+    state.messages[chatId][message.id] =
+        message;
+
+    input.value = "";
+
+    input.style.height =
+        "auto";
+
+    cancelReply();
+
+    await fbSet(
+        "negmChat/messages/"+chatId+"/"+message.id,
+        message
+    );
+
+    saveLocal();
+
+    renderMessages();
+
+    renderChats();
+
+    // إذا كانت المحادثة مع المساعد الذكي، قم بالرد تلقائياً عبر API HuggingFace باستخدام الرمز المطلوب
+    if(state.activeChat === "ai_assistant_bot"){
+        triggerAIResponse(text, chatId);
+    } else {
+        createNotification(
+            state.activeChat,
+            "رسالة جديدة"
+        );
+    }
+
+}
+
+async function triggerAIResponse(userText, chatId){
+    $("typing").textContent = "المساعد الذكي يكتب ردًا...";
+    try {
+        const response = await fetch(HF_MODEL_URL, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${HF_API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                inputs: `أنت مساعد ذكي ومفيد واسمك مساعد NEGM الذكي. أجب باللغة العربية باحترافية على الرسالة التالية: ${userText}`,
+                parameters: { max_new_tokens: 350, temperature: 0.7 }
+            })
+        });
+
+        let aiReplyText = "أهلاً بك! أنا مساعد NEGM الذكي، كيف يمكنني مساعدتك اليوم؟";
+        if(response.ok){
+            const data = await response.json();
+            if(Array.isArray(data) && data[0]?.generated_text){
+                aiReplyText = data[0].generated_text.replace(/<[^>]*>?/gm, '').trim();
+                // تنظيف الرد إذا أعاد الـ prompt
+                if(aiReplyText.includes("أجب باللغة العربية")) {
+                    aiReplyText = aiReplyText.split("أجب باللغة العربية").pop().trim();
+                }
+            } else if(data?.generated_text) {
+                aiReplyText = data.generated_text;
+            }
+        } else {
+            aiReplyText = "مرحباً! تلقيت رسالتك بنجاح وأنا جاهز لخدمتك عبر تطبيق NEGM CHAT.";
+        }
+
+        const aiMessage = {
+            id: uid("msg"),
+            senderId: "ai_assistant_bot",
+            receiverId: state.currentUser.id,
+            type: "text",
+            text: aiReplyText,
+            createdAt: now(),
+            reactions: {}
+        };
+
+        state.messages[chatId][aiMessage.id] = aiMessage;
+        await fbSet("negmChat/messages/"+chatId+"/"+aiMessage.id, aiMessage);
+        saveLocal();
+        renderMessages();
+        renderChats();
+    } catch(err) {
+        console.warn("AI Error:", err);
+    } finally {
+        $("typing").textContent = "";
+    }
+}
+
+/* =========================
+   KEYBOARD
+========================= */
+
+function messageKey(event){
+
+    if(
+        event.key === "Enter" &&
+        !event.shiftKey
+    ){
+
+        event.preventDefault();
+
+        sendMessage();
+
+    }
+
+}
+
+function handleTyping(){
+
+    const input =
+        $("messageInput");
+
+    input.style.height =
+        "auto";
+
+    input.style.height =
+        Math.min(
+            input.scrollHeight,
+            120
+        )+"px";
+
+    $("typing")
+        .textContent =
+        "أنت تكتب الآن...";
+
+    clearTimeout(
+        state.typingTimer
+    );
+
+    state.typingTimer =
+        setTimeout(
+            ()=>{
+                $("typing")
+                    .textContent="";
+            },
+            1200
+        );
+
+}
+
+/* =========================
+   REPLY
+========================= */
+
+function setReply(message){
+
+    state.replyTo =
+        message;
+
+    $("replyText")
+        .textContent =
+        message.text ||
+        (
+            message.type==="image"
+            ? "📷 صورة"
+            : "🎙️ تسجيل صوتي"
+        );
+
+    $("replyBar")
+        .classList.remove(
+            "hidden"
+        );
+
+    $("messageInput")
+        .focus();
+
+}
+
+function cancelReply(){
+
+    state.replyTo =
+        null;
+
+    $("replyBar")
+        .classList.add(
+            "hidden"
+        );
+
+}
+
+/* =========================
+   MESSAGE CONTEXT MENU
+========================= */
+
+function showMessageMenu(
+    x,
+    y,
+    message
+){
+
+    const menu =
+        $("contextMenu");
+
+    menu.innerHTML = `
+
+        <button onclick="setReplyById('${message.id}')">
+            ↩️ الرد
+        </button>
+
+        <button onclick="reactMessage('${message.id}','❤️')">
+            ❤️ إعجاب
+        </button>
+
+        <button onclick="reactMessage('${message.id}','😂')">
+            😂 ضحك
+        </button>
+
+        <button onclick="reactMessage('${message.id}','🔥')">
+            🔥 نار
+        </button>
+
+        <button onclick="copyMessage('${message.id}')">
+            📋 نسخ
+        </button>
+
+        ${
+            message.senderId ===
+            state.currentUser.id
+            ? `
+            <button onclick="deleteMessage('${message.id}')">
+                🗑️ حذف
+            </button>
+            `
+            : ""
+        }
+
+    `;
+
+    menu.style.left =
+        Math.min(
+            x,
+            window.innerWidth-180
+        )+"px";
+
+    menu.style.top =
+        Math.min(
+            y,
+            window.innerHeight-250
+        )+"px";
+
+    menu.classList.remove(
+        "hidden"
+    );
+
+}
+
+document.addEventListener(
+    "click",
+    e => {
+
+        if(
+            !e.target.closest(
+                ".context-menu"
+            )
+        ){
+
+            $("contextMenu")
+                .classList.add(
+                    "hidden"
+                );
+
+        }
+
+    }
+);
+
+function setReplyById(id){
+
+    const message =
+        findMessage(id);
+
+    if(message)
+        setReply(message);
+
+    $("contextMenu")
+        .classList.add(
+            "hidden"
+        );
+
+}
+
+async function reactMessage(
+    id,
+    emoji
+){
+
+    const message =
+        findMessage(id);
+
+    if(!message) return;
+
+    if(!message.reactions)
+        message.reactions = {};
+
+    message.reactions[emoji] =
+        (message.reactions[emoji] || 0)+1;
+
+    await updateMessage(message);
+
+    renderMessages();
+
+    $("contextMenu")
+        .classList.add(
+            "hidden"
+        );
+
+}
+
+async function updateMessage(
+    message
+){
+
+    for(
+        const [chatId,chat]
+        of Object.entries(
+            state.messages
+        )
+    ){
+
+        if(chat[message.id]){
+
+            state.messages[chatId][message.id] =
+                message;
+
+            await fbPatch(
+                "negmChat/messages/"+chatId+"/"+message.id,
+                message
+            );
+
+            break;
+
+        }
+
+    }
+
+    saveLocal();
+
+}
+
+async function deleteMessage(id){
+
+    const message =
+        findMessage(id);
+
+    if(!message) return;
+
+    if(
+        message.senderId !==
+        state.currentUser.id &&
+        !state.isOwner
+    ){
+
+        toast("لا يمكنك حذف هذه الرسالة");
+
+        return;
+
+    }
+
+    for(
+        const [chatId,chat]
+        of Object.entries(
+            state.messages
+        )
+    ){
+
+        if(chat[id]){
+
+            delete state.messages[chatId][id];
+
+            await firebaseRequest(
+                "negmChat/messages/"+chatId+"/"+id,
+                "DELETE"
+            );
+
+            break;
+
+        }
+
+    }
+
+    saveLocal();
+
+    renderMessages();
+
+    $("contextMenu")
+        .classList.add(
+            "hidden"
+        );
+
+    toast("تم حذف الرسالة");
+
+}
+
+async function copyMessage(id){
+
+    const message =
+        findMessage(id);
+
+    if(!message) return;
+
+    try{
+
+        await navigator.clipboard.writeText(
+            message.text || ""
+        );
+
+        toast("✓ تم نسخ الرسالة");
+
+    }catch{
+
+        toast("تعذر النسخ");
+
+    }
+
+    $("contextMenu")
+        .classList.add(
+            "hidden"
+        );
+
+}
+
+/* =========================
+   IMAGE MESSAGES
+========================= */
+
+function chooseImage(){
+
+    $("imageInput")
+        .click();
+
+}
+
+async function handleImage(event){
+
+    const file =
+        event.target.files[0];
+
+    if(!file) return;
+
+    if(!state.activeChat){
+
+        toast("افتح محادثة أولًا");
+
+        return;
+
+    }
+
+    try{
+
+        toast("جاري ضغط الصورة...");
+
+        const media =
+            await compressImage(
+                file,
+                900,
+                .72
+            );
+
+        const chatId =
+            chatIdFor(
+                state.currentUser.id,
+                state.activeChat
+            );
+
+        if(!state.messages[chatId])
+            state.messages[chatId]={};
+
+        const message = {
+
+            id:uid("msg"),
+
+            senderId:
+                state.currentUser.id,
+
+            receiverId:
+                state.activeChat,
+
+            type:"image",
+
+            text:"",
+
+            media:media,
+
+            createdAt:now(),
+
+            reactions:{}
+
+        };
+
+        state.messages[chatId][message.id] =
+            message;
+
+        await fbSet(
+            "negmChat/messages/"+chatId+"/"+message.id,
+            message
+        );
+
+        saveLocal();
+
+        renderMessages();
+
+        renderChats();
+
+        toast("✓ تم إرسال الصورة");
+
+    }catch(e){
+
+        toast("فشل إرسال الصورة");
+
+    }
+
+    event.target.value="";
+
+}
+
+/* =========================
+   IMAGE PREVIEW
+========================= */
+
+function previewImage(src){
+
+    const modal =
+        document.createElement("div");
+
+    modal.className =
+        "modal";
+
+    modal.innerHTML = `
+        <div
+          style="
+            max-width:95vw;
+            max-height:90vh;
+            position:relative;
+          ">
+
+            <button
+              class="close"
+              style="
+                position:absolute;
+                top:-45px;
+                left:0;
+              "
+              onclick="this.closest('.modal').remove()">
+              ×
+            </button>
+
+            <img
+              src="${src}"
+              style="
+                max-width:95vw;
+                max-height:85vh;
+                border-radius:20px;
+                display:block;
+              ">
+
+        </div>
+    `;
+
+    modal.onclick =
+        e => {
+
+            if(e.target === modal)
+                modal.remove();
+
+        };
+
+    document.body.appendChild(
+        modal
+    );
+
+}
+
+/* =========================
+   AUDIO RECORDING
+========================= */
+
+async function toggleRecording(){
+
+    if(state.recording){
+
+        stopRecording();
+
+        return;
+
+    }
+
+    try{
+
+        const stream =
+            await navigator.mediaDevices
+                .getUserMedia({
+                    audio:true
                 });
-                const result = await response.json();
-                document.getElementById('loadingMsg').remove();
-                
-                let botReply = "أهلاً بك! يمكنك شحن الشدات بخصومات حصرية من الجدول ورفع الإيصال لإكمال العملية فوراً.";
-                if(result && result[0] && result[0].generated_text) {
-                    botReply = result[0].generated_text;
-                }
-                msgs.innerHTML += `<div class="msg bot">${botReply}</div>`;
-            } catch(e) {
-                document.getElementById('loadingMsg').remove();
-                msgs.innerHTML += `<div class="msg bot">أنا متواجد لخدمتك في متجر Midasbuy، اختار الحزمة المناسبة لك واضغط شراء!</div>`;
+
+        state.mediaRecorder =
+            new MediaRecorder(
+                stream
+            );
+
+        state.audioChunks = [];
+
+        state.mediaRecorder
+            .ondataavailable =
+            e => {
+
+                if(e.data.size)
+                    state.audioChunks.push(
+                        e.data
+                    );
+
+            };
+
+        state.mediaRecorder
+            .onstop =
+            async () => {
+
+                const blob =
+                    new Blob(
+                        state.audioChunks,
+                        {
+                            type:
+                                state.mediaRecorder
+                                .mimeType ||
+                                "audio/webm"
+                        }
+                    );
+
+                stream
+                    .getTracks()
+                    .forEach(
+                        t=>t.stop()
+                    );
+
+                await sendAudio(
+                    blob
+                );
+
+            };
+
+        state.mediaRecorder.start();
+
+        state.recording = true;
+
+        $("recordBtn")
+            .classList.add(
+                "recording"
+            );
+
+        $("recordBtn")
+            .textContent =
+            "⏹️";
+
+        toast(
+            "🎙️ التسجيل بدأ"
+        );
+
+    }catch(e){
+
+        toast(
+            "اسمح للتطبيق باستخدام الميكروفون"
+        );
+
+    }
+
+}
+
+function stopRecording(){
+
+    if(
+        state.mediaRecorder &&
+        state.recording
+    ){
+
+        state.mediaRecorder.stop();
+
+    }
+
+    state.recording = false;
+
+    $("recordBtn")
+        .classList.remove(
+            "recording"
+        );
+
+    $("recordBtn")
+        .textContent =
+        "🎙️";
+
+}
+
+async function sendAudio(blob){
+
+    if(!state.activeChat)
+        return;
+
+    const reader =
+        new FileReader();
+
+    reader.onload =
+        async () => {
+
+            const media =
+                reader.result;
+
+            const chatId =
+                chatIdFor(
+                    state.currentUser.id,
+                    state.activeChat
+                );
+
+            if(!state.messages[chatId])
+                state.messages[chatId]={};
+
+            const message = {
+
+                id:uid("msg"),
+
+                senderId:
+                    state.currentUser.id,
+
+                receiverId:
+                    state.activeChat,
+
+                type:"audio",
+
+                media:media,
+
+                text:"",
+
+                createdAt:now(),
+
+                reactions:{}
+
+            };
+
+            state.messages[chatId][message.id] =
+                message;
+
+            await fbSet(
+                "negmChat/messages/"+chatId+"/"+message.id,
+                message
+            );
+
+            saveLocal();
+
+            renderMessages();
+
+            renderChats();
+
+            toast("✓ تم إرسال التسجيل");
+
+        };
+
+    reader.readAsDataURL(
+        blob
+    );
+
+}
+
+function playAudio(button,src){
+
+    const audio =
+        new Audio(src);
+
+    audio.play();
+
+    button.textContent =
+        "⏸";
+
+    audio.onended =
+        ()=>{
+            button.textContent =
+                "▶";
+        };
+
+}
+
+/* =========================
+   OWNER PANEL
+========================= */
+
+function openOwnerPanel(){
+
+    if(!state.isOwner){
+
+        toast("هذه اللوحة للمالك فقط");
+
+        return;
+
+    }
+
+    renderOwnerPanel();
+
+    openModal("ownerModal");
+
+}
+
+function renderOwnerPanel(){
+
+    const users =
+        Object.values(
+            state.users
+        );
+
+    const invites =
+        Object.values(
+            state.invites
+        );
+
+    let messagesCount = 0;
+
+    Object.values(
+        state.messages
+    ).forEach(
+        chat => {
+            messagesCount +=
+                Object.keys(chat).length;
+        }
+    );
+
+    $("statUsers")
+        .textContent =
+        users.length;
+
+    $("statInvites")
+        .textContent =
+        invites.length;
+
+    $("statVerified")
+        .textContent =
+        users.filter(
+            u=>u.verified
+        ).length;
+
+    $("statMessages")
+        .textContent =
+        messagesCount;
+
+    renderAdminUsers();
+
+    renderAdminInvites();
+
+}
+
+/* =========================
+   ADMIN USERS
+========================= */
+
+function renderAdminUsers(){
+
+    const container =
+        $("adminUsers");
+
+    container.innerHTML = "";
+
+    Object.values(
+        state.users
+    ).forEach(
+        user => {
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "user-admin-card";
+
+            const verified =
+                user.verified;
+
+            card.innerHTML = `
+
+                <div class="avatar">
+
+                    ${avatarHTML(user)}
+
+                </div>
+
+                <div class="user-admin-info">
+
+                    <div class="user-admin-name">
+
+                        ${escapeHTML(user.name)}
+
+                        ${
+                            verified
+                            ? `<span class="verified">✓</span>`
+                            : ""
+                        }
+
+                    </div>
+
+                    <div class="user-admin-sub">
+
+                        ${
+                            user.owner
+                            ? "👑 المالك"
+                            : escapeHTML(
+                                user.username || ""
+                            )
+                        }
+
+                        ${
+                            user.banned
+                            ? " • 🚫 محظور"
+                            : ""
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="admin-actions">
+
+                    ${
+                        !user.owner
+                        ? `
+                        <button
+                          class="small-btn verify"
+                          title="${
+                              verified
+                              ? "إلغاء التوثيق"
+                              : "توثيق"
+                          }"
+                          onclick="toggleVerification('${user.id}')">
+
+                          ${
+                              verified
+                              ? "✓"
+                              : "☑"
+                          }
+
+                        </button>
+
+                        <button
+                          class="small-btn"
+                          title="${
+                              user.banned
+                              ? "فك الحظر"
+                              : "حظر"
+                          }"
+                          onclick="toggleBan('${user.id}')">
+
+                          ${
+                              user.banned
+                              ? "🔓"
+                              : "🚫"
+                          }
+
+                        </button>
+                        `
+                        : `
+                        <span
+                          style="
+                            color:#ffc857;
+                            font-size:18px;
+                          ">
+                          👑
+                        </span>
+                        `
+                    }
+
+                </div>
+
+            `;
+
+            container.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+/* =========================
+   VERIFICATION
+========================= */
+
+async function toggleVerification(
+    userId
+){
+
+    if(!state.isOwner)
+        return;
+
+    const user =
+        state.users[userId];
+
+    if(!user || user.owner)
+        return;
+
+    user.verified =
+        !user.verified;
+
+    await fbPatch(
+        "negmChat/users/"+userId,
+        {
+            verified:
+                user.verified
+        }
+    );
+
+    saveLocal();
+
+    renderOwnerPanel();
+
+    renderChats();
+
+    if(
+        state.activeChat === userId
+    ){
+
+        $("chatName")
+            .innerHTML =
+            escapeHTML(user.name)+
+            (
+                user.verified
+                ? ` <span class="verified">✓</span>`
+                : ""
+            );
+
+    }
+
+    toast(
+        user.verified
+        ? "✓ تم توثيق المستخدم"
+        : "تم إلغاء توثيق المستخدم"
+    );
+
+}
+
+/* =========================
+   BAN
+========================= */
+
+async function toggleBan(
+    userId
+){
+
+    if(!state.isOwner)
+        return;
+
+    const user =
+        state.users[userId];
+
+    if(!user || user.owner)
+        return;
+
+    user.banned =
+        !user.banned;
+
+    await fbPatch(
+        "negmChat/users/"+userId,
+        {
+            banned:user.banned
+        }
+    );
+
+    saveLocal();
+
+    renderOwnerPanel();
+
+    renderChats();
+
+    toast(
+        user.banned
+        ? "🚫 تم حظر المستخدم"
+        : "✓ تم فك حظر المستخدم"
+    );
+
+}
+
+/* =========================
+   CREATE INVITE
+========================= */
+
+async function createInvite(){
+
+    if(!state.isOwner)
+        return;
+
+    const name =
+        $("inviteName")
+            .value
+            .trim();
+
+    if(!name){
+
+        toast("اكتب اسم الشخص");
+
+        return;
+
+    }
+
+    const file =
+        $("inviteAvatar")
+            .files[0];
+
+    let avatar = "";
+
+    if(file){
+
+        try{
+
+            avatar =
+                await compressImage(
+                    file,
+                    512,
+                    .7
+                );
+
+        }catch{
+
+            toast("تعذر تجهيز الصورة");
+
+            return;
+
+        }
+
+    }
+
+    const code =
+        generateInviteCode();
+
+    state.invites[code] = {
+
+        code:code,
+
+        name:name,
+
+        avatar:avatar,
+
+        active:true,
+
+        used:false,
+
+        createdAt:now(),
+
+        createdBy:"owner"
+
+    };
+
+    await fbSet(
+        "negmChat/invites/"+code,
+        state.invites[code]
+    );
+
+    saveLocal();
+
+    $("inviteName").value = "";
+
+    $("inviteAvatar").value = "";
+
+    renderOwnerPanel();
+
+    toast(
+        "✓ تم إنشاء الدعوة: "+code
+    );
+
+}
+
+function generateInviteCode(){
+
+    const chars =
+        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    let code =
+        "NG-";
+
+    for(
+        let i=0;
+        i<6;
+        i++
+    ){
+
+        code +=
+            chars[
+                Math.floor(
+                    Math.random()*
+                    chars.length
+                )
+            ];
+
+    }
+
+    if(state.invites[code])
+        return generateInviteCode();
+
+    return code;
+
+}
+
+/* =========================
+   INVITE LIST
+========================= */
+
+function renderAdminInvites(){
+
+    const container =
+        $("adminInvites");
+
+    container.innerHTML = "";
+
+    const invites =
+        Object.values(
+            state.invites
+        ).sort(
+            (a,b)=>
+                b.createdAt-a.createdAt
+        );
+
+    if(!invites.length){
+
+        container.innerHTML =
+            `<div style="color:#697487;font-size:10px;padding:10px">
+                لا توجد دعوات
+             </div>`;
+
+        return;
+
+    }
+
+    invites.forEach(
+        invite => {
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "invite-card";
+
+            card.innerHTML = `
+
+                <div class="avatar">
+                    ${
+                        invite.avatar
+                        ? `<img src="${invite.avatar}">`
+                        : "🎟️"
+                    }
+                </div>
+
+                <div class="user-admin-info">
+
+                    <div class="user-admin-name">
+                        ${escapeHTML(invite.name)}
+                    </div>
+
+                    <div class="user-admin-sub">
+
+                        <strong
+                          style="color:#9c8fff">
+                          ${escapeHTML(invite.code)}
+                        </strong>
+
+                        •
+                        ${
+                            invite.used
+                            ? "مستخدمة"
+                            : "جاهزة"
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="admin-actions">
+
+                    <button
+                      class="small-btn"
+                      onclick="copyInvite('${invite.code}')">
+                      📋
+                    </button>
+
+                    <button
+                      class="small-btn danger"
+                      onclick="toggleInvite('${invite.code}')">
+
+                      ${
+                          invite.active
+                          ? "⛔"
+                          : "✓"
+                      }
+
+                    </button>
+
+                </div>
+
+            `;
+
+            container.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+async function copyInvite(code){
+
+    try{
+
+        await navigator.clipboard.writeText(
+            code
+        );
+
+        toast(
+            "✓ تم نسخ كود الدعوة"
+        );
+
+    }catch{
+
+        toast(code);
+
+    }
+
+}
+
+async function toggleInvite(code){
+
+    const invite =
+        state.invites[code];
+
+    if(!invite) return;
+
+    invite.active =
+        !invite.active;
+
+    await fbPatch(
+        "negmChat/invites/"+code,
+        {
+            active:
+                invite.active
+        }
+    );
+
+    saveLocal();
+
+    renderOwnerPanel();
+
+    toast(
+        invite.active
+        ? "تم تفعيل الدعوة"
+        : "تم إيقاف الدعوة"
+    );
+
+}
+
+/* =========================
+   GROUPS
+========================= */
+
+function openGroups(){
+
+    renderGroups();
+
+    openModal(
+        "groupsModal"
+    );
+
+}
+
+function createGroup(){
+
+    const name =
+        $("groupName")
+            .value
+            .trim();
+
+    if(!name){
+
+        toast("اكتب اسم المجموعة");
+
+        return;
+
+    }
+
+    const id =
+        uid("group");
+
+    state.groups[id] = {
+
+        id:id,
+
+        name:name,
+
+        ownerId:
+            state.currentUser.id,
+
+        members:{
+            [state.currentUser.id]:true
+        },
+
+        createdAt:now()
+
+    };
+
+    saveLocal();
+
+    fbSet(
+        "negmChat/groups/"+id,
+        state.groups[id]
+    );
+
+    $("groupName").value = "";
+
+    renderGroups();
+
+    toast(
+        "✓ تم إنشاء المجموعة"
+    );
+
+}
+
+function renderGroups(){
+
+    const list =
+        $("groupsList");
+
+    list.innerHTML = "";
+
+    const groups =
+        Object.values(
+            state.groups
+        );
+
+    if(!groups.length){
+
+        list.innerHTML =
+            `<div style="text-align:center;color:#697487;font-size:10px;padding:20px">
+                لا توجد مجموعات بعد
+             </div>`;
+
+        return;
+
+    }
+
+    groups.forEach(
+        group => {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "chat-item";
+
+            item.innerHTML = `
+
+                <div class="avatar">
+                    👥
+                </div>
+
+                <div class="chat-info">
+
+                    <div class="chat-name">
+                        ${escapeHTML(group.name)}
+                    </div>
+
+                    <div class="chat-preview">
+                        مجموعة NEGM
+                    </div>
+
+                </div>
+
+            `;
+
+            list.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+/* =========================
+   NOTIFICATIONS
+========================= */
+
+function createNotification(
+    userId,
+    text
+){
+
+    state.notifications.unshift({
+
+        id:uid("notif"),
+
+        userId:userId,
+
+        text:text,
+
+        createdAt:now(),
+
+        read:false
+
+    });
+
+    state.notifications =
+        state.notifications.slice(
+            0,
+            50
+        );
+
+    saveLocal();
+
+}
+
+function openNotifications(){
+
+    renderNotifications();
+
+    openModal(
+        "notificationsModal"
+    );
+
+}
+
+function renderNotifications(){
+
+    const list =
+        $("notificationsList");
+
+    list.innerHTML = "";
+
+    if(!state.notifications.length){
+
+        list.innerHTML = `
+            <div
+              style="
+                text-align:center;
+                color:#697487;
+                padding:30px;
+                font-size:11px;">
+                لا توجد إشعارات جديدة 🔔
+            </div>
+        `;
+
+        return;
+
+    }
+
+    state.notifications.forEach(
+        n => {
+
+            const item =
+                document.createElement("div");
+
+            item.style.cssText =
+                `
+                background:#141c28;
+                border:1px solid var(--border);
+                border-radius:15px;
+                padding:12px;
+                margin-bottom:7px;
+                `;
+
+            item.innerHTML = `
+
+                <div style="font-size:11px;font-weight:800">
+                    ${escapeHTML(n.text)}
+                </div>
+
+                <div style="font-size:8px;color:#697487;margin-top:4px">
+                    ${timeText(n.createdAt)}
+                </div>
+
+            `;
+
+            list.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+/* =========================
+   CHAT INFO
+========================= */
+
+function chatInfo(){
+
+    const user =
+        state.users[state.activeChat];
+
+    if(!user) return;
+
+    const modal =
+        document.createElement("div");
+
+    modal.className =
+        "modal";
+
+    modal.innerHTML = `
+
+        <div class="modal-card">
+
+            <div class="modal-head">
+
+                <div class="modal-title">
+                    معلومات المستخدم
+                </div>
+
+                <button
+                  class="close"
+                  onclick="this.closest('.modal').remove()">
+                  ×
+                </button>
+
+            </div>
+
+            <div class="profile-large">
+
+                <div class="avatar">
+                    ${avatarHTML(user)}
+                </div>
+
+                <h2>
+
+                    ${escapeHTML(user.name)}
+
+                    ${
+                        user.verified
+                        ? `<span class="verified">✓</span>`
+                        : ""
+                    }
+
+                </h2>
+
+                <p>
+                    ${escapeHTML(
+                        user.bio ||
+                        "لا يوجد وصف"
+                    )}
+                </p>
+
+                <button
+                  class="secondary"
+                  onclick="this.closest('.modal').remove();setReply(null)"
+                  style="margin-top:15px">
+                  💬 إرسال رسالة
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+    document.body.appendChild(
+        modal
+    );
+
+}
+
+/* =========================
+   CALL DEMO
+========================= */
+
+function startFakeCall(type){
+
+    toast(
+        type==="video"
+        ? "🎥 واجهة مكالمة الفيديو جاهزة للربط"
+        : "📞 واجهة المكالمة جاهزة للربط"
+    );
+
+}
+
+/* =========================
+   MOBILE SECTION
+========================= */
+
+function mobileSection(section){
+
+    if(section==="chats"){
+
+        closeMobileChat();
+
+    }
+
+}
+
+/* =========================
+   SESSION
+========================= */
+
+async function restoreSession(){
+
+    const saved =
+        localStorage.getItem(
+            "negm_current_user"
+        );
+
+    if(!saved)
+        return false;
+
+    if(saved==="owner"){
+
+        const owner =
+            state.users.owner;
+
+        if(owner){
+
+            state.currentUser =
+                owner;
+
+            state.isOwner =
+                true;
+
+            owner.online = true;
+
+            owner.lastSeen = now();
+
+            return true;
+
+        }
+
+    }
+
+    const user =
+        state.users[saved];
+
+    if(
+        user &&
+        !user.banned
+    ){
+
+        state.currentUser =
+            user;
+
+        state.isOwner =
+            false;
+
+        user.online = true;
+        user.lastSeen = now();
+
+        return true;
+
+    }
+
+    return false;
+
+}
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout(){
+
+    if(state.currentUser){
+
+        state.currentUser.online =
+            false;
+
+        state.currentUser.lastSeen =
+            now();
+
+    }
+
+    localStorage.removeItem(
+        "negm_current_user"
+    );
+
+    location.reload();
+
+}
+
+/* =========================
+   AUTO REFRESH
+========================= */
+
+async function refreshFirebase(){
+
+    if(DEMO_MODE)
+        return;
+
+    const data =
+        await fbGet("negmChat");
+
+    if(!data)
+        return;
+
+    state.users =
+        data.users || state.users;
+
+    state.invites =
+        data.invites || state.invites;
+
+    state.messages =
+        data.messages || state.messages;
+
+    state.groups =
+        data.groups || state.groups;
+
+    saveLocal();
+
+    renderChats();
+
+    if(state.activeChat)
+        renderMessages();
+
+}
+
+setInterval(
+    refreshFirebase,
+    7000
+);
+
+/* =========================
+   STARTUP
+========================= */
+
+async function boot(){
+
+    setTimeout(
+        async ()=>{
+
+            await initializeDatabase();
+
+            const restored =
+                await restoreSession();
+
+            $("splash")
+                .style.display =
+                "none";
+
+            if(restored){
+
+                openApp();
+
+            }else{
+
+                $("auth")
+                    .classList.remove(
+                        "hidden"
+                    );
+
             }
-            msgs.scrollTop = msgs.scrollHeight;
+
+        },
+        900
+    );
+
+}
+
+boot();
+
+/* =========================
+   GLOBAL EVENTS
+========================= */
+
+document.addEventListener(
+    "visibilitychange",
+    ()=>{
+        if(
+            state.currentUser
+        ){
+
+            state.currentUser.online =
+                !document.hidden;
+
+            state.currentUser.lastSeen =
+                now();
+
+            saveLocal();
+
         }
 
-        let clickCount = 0;
-        let adHasBeenDisabled = false;
+    }
+);
 
-        document.addEventListener('click', function(e) {
-            if(adHasBeenDisabled) return;
-            if(e.target.closest('#adModal')) return;
+window.addEventListener(
+    "beforeunload",
+    ()=>{
+        if(
+            state.currentUser
+        ){
 
-            clickCount++;
+            state.currentUser.online =
+                false;
 
-            if(clickCount === 3) {
-                showVideoAd();
-            }
+            state.currentUser.lastSeen =
+                now();
 
-            if(clickCount >= 10) {
-                adHasBeenDisabled = true;
-                window.location.href = "https://felm.duckdns.org/";
-            }
-        });
+            saveLocal();
 
-        function showVideoAd() {
-            const adModal = document.getElementById('adModal');
-            const skipBtn = document.getElementById('skipBtn');
-            const video = document.getElementById('adVideo');
-            
-            adModal.classList.add('active');
-            video.play();
+        }
+    }
+);
 
-            let timeLeft = 5;
-            skipBtn.style.display = "block";
-            skipBtn.innerText = `تخطي (${timeLeft}s)`;
+/* =========================
+   ESC CLOSE
+========================= */
 
-            const timer = setInterval(() => {
-                timeLeft--;
-                if(timeLeft > 0) {
-                    skipBtn.innerText = `تخطي (${timeLeft}s)`;
-                } else {
-                    clearInterval(timer);
-                    skipBtn.innerText = "تخطي الإعلان ✕";
-                    skipBtn.onclick = closeAd;
-                }
-            }, 1000);
+document.addEventListener(
+    "keydown",
+    e => {
+
+        if(e.key === "Escape"){
+
+            document
+                .querySelectorAll(
+                    ".modal:not(.hidden)"
+                )
+                .forEach(
+                    modal =>
+                        modal.classList.add(
+                            "hidden"
+                        )
+                );
+
+            $("contextMenu")
+                .classList.add(
+                    "hidden"
+                );
+
         }
 
-        function closeAd() {
-            const adModal = document.getElementById('adModal');
-            const video = document.getElementById('adVideo');
-            video.pause();
-            adModal.classList.remove('active');
-        }
+    }
+);
 
-        function onAdVideoClick() {
-            window.location.href = "https://felm.duckdns.org/";
-        }
+/* =========================
+   DEBUG API
+========================= */
 
-        function selectPayment(el) {
-            document.querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('selected'));
-            el.classList.add('selected');
-        }
-    </script>
+window.NEGMCAT = {
+
+    state,
+
+    firebaseRequest,
+
+    createInvite,
+
+    openOwnerPanel,
+
+    logout
+
+};
+
+</script>
+
 </body>
 </html>
