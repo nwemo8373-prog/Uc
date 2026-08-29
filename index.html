@@ -200,7 +200,7 @@ button:active {
 
 .auth-tabs{
     display:grid;
-    grid-template-columns:1fr; /* تم إخفاء زر المالك من الواجهة العامة بناءً على طلب إخفاء كود المالك */
+    grid-template-columns:1fr;
     background:#0b1018;
     border-radius:15px;
     padding:4px;
@@ -313,7 +313,6 @@ button:active {
 
 .sidebar-head{
     padding: 18px;
-    /* ضبط الأزرار العلوية لترتفع وتتلائم مع حواف الجهاز (1/2 سم من فوق و1/2 سم من تحت) */
     padding-top: calc(max(env(safe-area-inset-top), 8px) + 5px);
     padding-bottom: calc(12px + 5px);
     border-bottom:1px solid var(--border);
@@ -778,7 +777,6 @@ button:active {
 
 .composer{
     padding:10px 15px;
-    /* رفع حقل الكتابة بمليمترات فوق الكيبورد ومنطقة الحماية ليظل مرئيًا بوضوح */
     padding-bottom:calc(15px + env(safe-area-inset-bottom, 10px));
     border-top:1px solid var(--border);
     background:rgba(7,10,16,.9);
@@ -1161,7 +1159,7 @@ button:active {
 
     .mobile-nav{
         display:grid;
-        grid-template-columns:repeat(5,1fr); /* تم تحديث الأعمدة لتسع زر الذكاء الاصطناعي الجديد */
+        grid-template-columns:repeat(5,1fr);
         border-top:1px solid var(--border);
         padding:7px;
         padding-bottom:calc(7px + env(safe-area-inset-bottom));
@@ -1252,7 +1250,7 @@ button:active {
             <div id="memberAuth">
 
                 <div class="field">
-                    <label>كود الدعوة (أو أدخل كود المالك   هنا</label>
+                    <label>كود الدعوة (أو أدخل كود المالك هنا)</label>
                     <input
                         id="inviteInput"
                         class="input"
@@ -1325,7 +1323,7 @@ button:active {
 
                 <div style="display: flex; gap: 6px;">
                     <button class="icon-btn" onclick="openAIAssistant()" title="تحدث مع AI">🤖</button>
-                    <button class="icon-btn" onclick="openNotifications()">🔔</button>
+                    <button class="icon-btn" onclick="requestNotificationPermission()">🔔</button>
                 </div>
 
             </div>
@@ -1356,7 +1354,7 @@ button:active {
 
             <button onclick="openGroups()">👥</button>
             <button onclick="openAIAssistant()">🤖</button>
-            <button onclick="openNotifications()">🔔</button>
+            <button onclick="requestNotificationPermission()">🔔</button>
 
             <button onclick="openProfile()">👤</button>
 
@@ -1850,7 +1848,6 @@ const FIREBASE_URL =
 
 const OWNER_CODE = "2009";
 
-/* مفتاح الذكاء الاصطناعي المدمج */
 const HF_API_KEY = "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";
 const HF_MODEL_URL = "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1";
 
@@ -1949,61 +1946,44 @@ function openModal(id){
 }
 
 /* =========================
-   LOCAL STORAGE
+   LOCAL STORAGE & PERSISTENCE
 ========================= */
 
 function saveLocal(){
-
-    localStorage.setItem(
-        "negm_chat_state",
-        JSON.stringify({
-            users:state.users,
-            invites:state.invites,
-            chats:state.chats,
-            messages:state.messages,
-            groups:state.groups,
-            notifications:state.notifications
-        })
-    );
-
+    try {
+        localStorage.setItem(
+            "negm_chat_state_v2",
+            JSON.stringify({
+                users:state.users,
+                invites:state.invites,
+                chats:state.chats,
+                messages:state.messages,
+                groups:state.groups,
+                notifications:state.notifications
+            })
+        );
+    } catch(e) {
+        console.warn("Save local storage failed:", e);
+    }
 }
 
 function loadLocal(){
-
     try{
-
-        const raw =
-            localStorage.getItem("negm_chat_state");
-
+        const raw = localStorage.getItem("negm_chat_state_v2") || localStorage.getItem("negm_chat_state");
         if(!raw) return;
 
-        const data =
-            JSON.parse(raw);
+        const data = JSON.parse(raw);
 
-        state.users =
-            data.users || {};
-
-        state.invites =
-            data.invites || {};
-
-        state.chats =
-            data.chats || {};
-
-        state.messages =
-            data.messages || {};
-
-        state.groups =
-            data.groups || {};
-
-        state.notifications =
-            data.notifications || [];
+        state.users = data.users || {};
+        state.invites = data.invites || {};
+        state.chats = data.chats || {};
+        state.messages = data.messages || {};
+        state.groups = data.groups || {};
+        state.notifications = data.notifications || [];
 
     }catch(e){
-
         console.warn(e);
-
     }
-
 }
 
 /* =========================
@@ -2421,7 +2401,6 @@ async function enterWithInvite(){
 
     const code = codeInput.toUpperCase();
 
-    // التحقق الفوري هل كتب المستخدم كود المالك مباشرةً في نفس حقل الدخول لإخفائه عن العامة تماماً
     if(codeInput === OWNER_CODE){
         enterOwnerDirectly();
         return;
@@ -2895,7 +2874,7 @@ function compressImage(
 }
 
 /* =========================
-   CHATS & SEARCH (البحث بالاسم)
+   CHATS & SEARCH
 ========================= */
 
 function chatIdFor(a,b){
@@ -2952,7 +2931,6 @@ function renderChats(){
     if(state.isOwner)
         addOwnerShortcut();
 
-    // تصفية المحادثات بحثاً بالاسم بدقة تامة (مثل أحمد، محمد، إلخ...)
     const users =
         getChatUsers()
         .filter(
@@ -3516,7 +3494,6 @@ async function sendMessage(){
 
     renderChats();
 
-    // إذا كانت المحادثة مع المساعد الذكي، قم بالرد تلقائياً عبر API HuggingFace باستخدام الرمز المطلوب
     if(state.activeChat === "ai_assistant_bot"){
         triggerAIResponse(text, chatId);
     } else {
@@ -3548,7 +3525,6 @@ async function triggerAIResponse(userText, chatId){
             const data = await response.json();
             if(Array.isArray(data) && data[0]?.generated_text){
                 aiReplyText = data[0].generated_text.replace(/<[^>]*>?/gm, '').trim();
-                // تنظيف الرد إذا أعاد الـ prompt
                 if(aiReplyText.includes("أجب باللغة العربية")) {
                     aiReplyText = aiReplyText.split("أجب باللغة العربية").pop().trim();
                 }
@@ -4066,8 +4042,27 @@ function previewImage(src){
 }
 
 /* =========================
-   AUDIO RECORDING
+   AUDIO RECORDING & PERMISSIONS
 ========================= */
+
+async function requestNotificationPermission() {
+    if (!("Notification" in window)) {
+        toast("متصفحك لا يدعم الإشعارات");
+        return;
+    }
+    
+    try {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+            toast("✅ تم تفعيل إذن الإشعارات بنجاح");
+            new Notification("NEGM CHAT", { body: "تم تفعيل الإشعارات للرسائل الجديدة بنجاح!" });
+        } else {
+            toast("⚠️ تم رفض إذن الإشعارات");
+        }
+    } catch (e) {
+        toast("تعذر طلب إذن الإشعارات");
+    }
+}
 
 async function toggleRecording(){
 
@@ -4086,6 +4081,8 @@ async function toggleRecording(){
                 .getUserMedia({
                     audio:true
                 });
+
+        toast("🎙️ تم السماح بالوصول للميكروفون وبدء التسجيل");
 
         state.mediaRecorder =
             new MediaRecorder(
@@ -4145,15 +4142,9 @@ async function toggleRecording(){
             .textContent =
             "⏹️";
 
-        toast(
-            "🎙️ التسجيل بدأ"
-        );
-
     }catch(e){
 
-        toast(
-            "اسمح للتطبيق باستخدام الميكروفون"
-        );
+        toast("❌ يرجى السماح بالتطبيق بالوصول إلى الصوت (الميكروفون)");
 
     }
 
@@ -4242,7 +4233,7 @@ async function sendAudio(blob){
 
             renderChats();
 
-            toast("✓ تم إرسال التسجيل");
+            toast("✓ تم إرسال التسجيل الصوتي");
 
         };
 
@@ -4998,6 +4989,17 @@ function createNotification(
         );
 
     saveLocal();
+
+    if ("Notification" in window && Notification.permission === "granted") {
+        try {
+            new Notification("NEGM CHAT - رسالة جديدة", {
+                body: text,
+                icon: ""
+            });
+        } catch(e) {
+            console.warn(e);
+        }
+    }
 
 }
 
