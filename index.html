@@ -11,6 +11,9 @@
 
 <title>NEGM CHAT</title>
 
+<!-- Supabase JS Client Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
 
@@ -725,9 +728,10 @@ button:active {
     margin-bottom:5px;
 }
 
-.media-message img{
+.media-message img, .media-message video{
     width:100%;
     display:block;
+    border-radius:12px;
 }
 
 .audio-message{
@@ -1052,6 +1056,84 @@ button:active {
 .small-btn.verify{
     background:rgba(66,165,255,.13);
     color:#66b8ff;
+}
+
+/* =========================
+   CALL MODAL & VIDEO OVERLAY
+========================= */
+
+.call-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(8, 11, 18, 0.95);
+    backdrop-filter: blur(15px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px 20px;
+}
+
+.call-avatar {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, var(--accent2), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    margin-top: 30px;
+    box-shadow: 0 0 50px rgba(108, 92, 231, 0.4);
+    animation: pulseCall 2s infinite;
+}
+
+@keyframes pulseCall {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(108,92,231,0.7); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 25px rgba(108,92,231,0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(108,92,231,0); }
+}
+
+.call-status-text {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 15px;
+}
+
+.call-controls {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.call-btn-danger {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: var(--red);
+    color: #fff;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-container {
+    width: 100%;
+    max-width: 450px;
+    height: 350px;
+    background: #000;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border);
+}
+
+.video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* =========================
@@ -1444,13 +1526,13 @@ button:active {
                 <div class="chat-actions">
 
                     <button
-                        class="icon-btn optional-mobile"
+                        class="icon-btn"
                         onclick="startFakeCall('audio')">
                         📞
                     </button>
 
                     <button
-                        class="icon-btn optional-mobile"
+                        class="icon-btn"
                         onclick="startFakeCall('video')">
                         🎥
                     </button>
@@ -1506,7 +1588,7 @@ button:active {
 
                     <button
                         class="attach-btn"
-                        onclick="chooseImage()">
+                        onclick="chooseMediaFile()">
                         ＋
                     </button>
 
@@ -1547,11 +1629,11 @@ button:active {
 </div>
 
 <input
-    id="imageInput"
+    id="mediaInput"
     type="file"
-    accept="image/*"
+    accept="image/*,video/*"
     class="hidden"
-    onchange="handleImage(event)">
+    onchange="handleMediaUpload(event)">
 
 <div
     id="profileModal"
@@ -1826,6 +1908,26 @@ button:active {
 
 </div>
 
+<!-- CALL OVERLAY MODAL -->
+<div id="callModal" class="call-modal hidden">
+    <div style="text-align: center;">
+        <h2 id="callTitle" style="margin: 0; font-size: 22px;">مكالمة جارية...</h2>
+        <div id="callStatus" class="call-status-text">جاري الاتصال...</div>
+    </div>
+
+    <div id="callAvatarBox" class="call-avatar">
+        <span id="callAvatarChar">🤖</span>
+    </div>
+
+    <div id="callVideoBox" class="video-container hidden">
+        <video id="aiVideoPlayer" autoplay loop muted playsinline></video>
+    </div>
+
+    <div class="call-controls">
+        <button class="call-btn-danger" onclick="endCall()">📞</button>
+    </div>
+</div>
+
 <div
     id="contextMenu"
     class="context-menu hidden">
@@ -1835,9 +1937,19 @@ button:active {
 
 <script>
 /* =========================================================
-   NEGM CHAT ENGINE
+   NEGM CHAT ENGINE WITH SUPABASE STORAGE & AI REAL VOICE
    SINGLE FILE
 ========================================================= */
+
+/* =========================
+   SUPABASE CONFIG
+========================= */
+const SUPABASE_URL = "https://lgwtpqcvfefgdnbwlbys.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XNeRaTGje_0mo_1G8lbtmw_EY-JbLoP";
+
+// Initialize Supabase Client
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const BUCKET_NAME = "memories";
 
 /* =========================
    CONFIG
@@ -1848,7 +1960,7 @@ const FIREBASE_URL =
 
 const OWNER_CODE = "2009";
 
-const HF_API_KEY = "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";
+const HF_API_KEY = "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";
 const HF_MODEL_URL = "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1";
 
 let DEMO_MODE = false;
@@ -1876,9 +1988,39 @@ const state = {
     mediaRecorder:null,
     audioChunks:[],
 
-    typingTimer:null
+    typingTimer:null,
+    activeCall: null
 
 };
+
+/* =========================
+   SUPABASE UPLOAD HELPER
+========================= */
+
+async function uploadToSupabase(file, folder = "uploads") {
+    try {
+        const fileExt = file.name ? file.name.split('.').pop() : (file.type.includes('video') ? 'mp4' : (file.type.includes('audio') ? 'webm' : 'jpg'));
+        const fileName = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${fileExt}`;
+        
+        const { data, error } = await supabaseClient.storage
+            .from(BUCKET_NAME)
+            .upload(fileName, file, {
+                cacheControl: '3600',
+                upsert: true
+            });
+
+        if (error) throw error;
+
+        const { data: publicUrlData } = supabaseClient.storage
+            .from(BUCKET_NAME)
+            .getPublicUrl(fileName);
+
+        return publicUrlData.publicUrl;
+    } catch (err) {
+        console.error("Supabase Storage Upload Error:", err);
+        throw err;
+    }
+}
 
 /* =========================
    HELPERS
@@ -1938,11 +2080,14 @@ function toast(text){
 }
 
 function closeModal(id){
-    $(id).classList.add("hidden");
+    $(id).classList.add(id ? id.endsWith("Modal") ? "hidden" : "hidden" : "hidden");
+    const target = $(id);
+    if(target) target.classList.add("hidden");
 }
 
 function openModal(id){
-    $(id).classList.remove("hidden");
+    const target = $(id);
+    if(target) target.classList.remove("hidden");
 }
 
 /* =========================
@@ -2747,129 +2892,23 @@ async function changeProfileImage(event){
 
     try{
 
-        toast("جاري ضغط الصورة...");
+        toast("جاري رفع صورة الملف الشخصي إلى Supabase...");
 
-        const data =
-            await compressImage(
-                file,
-                512,
-                .72
-            );
+        const publicUrl = await uploadToSupabase(file, "avatars");
 
-        state.currentUser.avatar =
-            data;
+        state.currentUser.avatar = publicUrl;
 
         $("profileAvatar")
             .innerHTML =
-            `<img src="${data}" alt="">`;
+            `<img src="${publicUrl}" alt="">`;
 
-        toast("✓ تم تجهيز الصورة");
+        toast("✓ تم تحديث الصورة ببروز دائم");
 
     }catch(e){
 
-        toast("تعذر قراءة الصورة");
+        toast("تعذر رفع الصورة للاستضافة");
 
     }
-
-}
-
-/* =========================
-   IMAGE COMPRESSION
-========================= */
-
-function compressImage(
-    file,
-    maxSize=512,
-    quality=.72
-){
-
-    return new Promise(
-        (resolve,reject)=>{
-
-            const reader =
-                new FileReader();
-
-            reader.onload = e => {
-
-                const img =
-                    new Image();
-
-                img.onload = () => {
-
-                    let w =
-                        img.width;
-
-                    let h =
-                        img.height;
-
-                    if(
-                        w > maxSize ||
-                        h > maxSize
-                    ){
-
-                        const ratio =
-                            Math.min(
-                                maxSize/w,
-                                maxSize/h
-                            );
-
-                        w =
-                            Math.round(
-                                w*ratio
-                            );
-
-                        h =
-                            Math.round(
-                                h*ratio
-                            );
-
-                    }
-
-                    const canvas =
-                        document.createElement(
-                            "canvas"
-                        );
-
-                    canvas.width = w;
-                    canvas.height = h;
-
-                    const ctx =
-                        canvas.getContext(
-                            "2d"
-                        );
-
-                    ctx.drawImage(
-                        img,
-                        0,
-                        0,
-                        w,
-                        h
-                    );
-
-                    resolve(
-                        canvas.toDataURL(
-                            "image/jpeg",
-                            quality
-                        )
-                    );
-
-                };
-
-                img.onerror =
-                    reject;
-
-                img.src =
-                    e.target.result;
-
-            };
-
-            reader.onerror =
-                reject;
-
-            reader.readAsDataURL(file);
-
-        }
-    );
 
 }
 
@@ -3045,7 +3084,7 @@ function renderChats(){
                                 (
                                     last.type==="image"
                                     ? "📷 صورة"
-                                    : "🎙️ تسجيل صوتي"
+                                    : (last.type==="video" ? "🎥 فيديو" : "🎙️ تسجيل صوتي")
                                 )
                               )
                             : (user.isAI ? "انقر لبدء التحدث مع المساعد الذكي" : "ابدأ المحادثة")
@@ -3302,6 +3341,14 @@ function renderMessage(
             </div>
         `;
 
+    }else if(message.type === "video"){
+
+        html += `
+            <div class="media-message">
+                <video src="${message.media}" controls></video>
+            </div>
+        `;
+
     }else if(message.type === "audio"){
 
         html += `
@@ -3515,7 +3562,7 @@ async function triggerAIResponse(userText, chatId){
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                inputs: `أنت مساعد ذكي ومفيد واسمك مساعد NEGM الذكي. أجب باللغة العربية باحترافية على الرسالة التالية: ${userText}`,
+                inputs: `أنت مساعد ذكي ومفيد واسمك مساعد NEGM الذكي. أجب باللغة العربية باحترافية وبشكل مباشر على الرسالة التالية: ${userText}`,
                 parameters: { max_new_tokens: 350, temperature: 0.7 }
             })
         });
@@ -3624,7 +3671,7 @@ function setReply(message){
         (
             message.type==="image"
             ? "📷 صورة"
-            : "🎙️ تسجيل صوتي"
+            : (message.type==="video" ? "🎥 فيديو" : "🎙️ تسجيل صوتي")
         );
 
     $("replyBar")
@@ -3891,17 +3938,17 @@ async function copyMessage(id){
 }
 
 /* =========================
-   IMAGE MESSAGES
+   MEDIA MESSAGES (SUPABASE INTEGRATED)
 ========================= */
 
-function chooseImage(){
+function chooseMediaFile(){
 
-    $("imageInput")
+    $("mediaInput")
         .click();
 
 }
 
-async function handleImage(event){
+async function handleMediaUpload(event){
 
     const file =
         event.target.files[0];
@@ -3918,14 +3965,10 @@ async function handleImage(event){
 
     try{
 
-        toast("جاري ضغط الصورة...");
+        toast("جاري رفع الملف إلى Supabase Storage...");
 
-        const media =
-            await compressImage(
-                file,
-                900,
-                .72
-            );
+        const mediaType = file.type.startsWith("video") ? "video" : "image";
+        const publicUrl = await uploadToSupabase(file, mediaType === "video" ? "videos" : "images");
 
         const chatId =
             chatIdFor(
@@ -3946,11 +3989,11 @@ async function handleImage(event){
             receiverId:
                 state.activeChat,
 
-            type:"image",
+            type:mediaType,
 
             text:"",
 
-            media:media,
+            media:publicUrl,
 
             createdAt:now(),
 
@@ -3972,11 +4015,11 @@ async function handleImage(event){
 
         renderChats();
 
-        toast("✓ تم إرسال الصورة");
+        toast(`✓ تم إرسال الـ ${mediaType === "video" ? "فيديو" : "صورة"}`);
 
     }catch(e){
 
-        toast("فشل إرسال الصورة");
+        toast("فشل رفع الملف إلى الاستضافة");
 
     }
 
@@ -4042,7 +4085,7 @@ function previewImage(src){
 }
 
 /* =========================
-   AUDIO RECORDING & PERMISSIONS
+   AUDIO RECORDING & SUPABASE STORAGE
 ========================= */
 
 async function requestNotificationPermission() {
@@ -4082,7 +4125,7 @@ async function toggleRecording(){
                     audio:true
                 });
 
-        toast("🎙️ تم السماح بالوصول للميكروفون وبدء التسجيل");
+        toast("🎙️ جاري التسجيل الصوت المباشر...");
 
         state.mediaRecorder =
             new MediaRecorder(
@@ -4179,67 +4222,60 @@ async function sendAudio(blob){
     if(!state.activeChat)
         return;
 
-    const reader =
-        new FileReader();
+    try {
+        toast("جاري رفع التسجيل الصوتي للاستضافة...");
+        const file = new File([blob], "recording.webm", { type: blob.type || "audio/webm" });
+        const mediaUrl = await uploadToSupabase(file, "records");
 
-    reader.onload =
-        async () => {
-
-            const media =
-                reader.result;
-
-            const chatId =
-                chatIdFor(
-                    state.currentUser.id,
-                    state.activeChat
-                );
-
-            if(!state.messages[chatId])
-                state.messages[chatId]={};
-
-            const message = {
-
-                id:uid("msg"),
-
-                senderId:
-                    state.currentUser.id,
-
-                receiverId:
-                    state.activeChat,
-
-                type:"audio",
-
-                media:media,
-
-                text:"",
-
-                createdAt:now(),
-
-                reactions:{}
-
-            };
-
-            state.messages[chatId][message.id] =
-                message;
-
-            await fbSet(
-                "negmChat/messages/"+chatId+"/"+message.id,
-                message
+        const chatId =
+            chatIdFor(
+                state.currentUser.id,
+                state.activeChat
             );
 
-            saveLocal();
+        if(!state.messages[chatId])
+            state.messages[chatId]={};
 
-            renderMessages();
+        const message = {
 
-            renderChats();
+            id:uid("msg"),
 
-            toast("✓ تم إرسال التسجيل الصوتي");
+            senderId:
+                state.currentUser.id,
+
+            receiverId:
+                state.activeChat,
+
+            type:"audio",
+
+            media:mediaUrl,
+
+            text:"",
+
+            createdAt:now(),
+
+            reactions:{}
 
         };
 
-    reader.readAsDataURL(
-        blob
-    );
+        state.messages[chatId][message.id] =
+            message;
+
+        await fbSet(
+            "negmChat/messages/"+chatId+"/"+message.id,
+            message
+        );
+
+        saveLocal();
+
+        renderMessages();
+
+        renderChats();
+
+        toast("✓ تم رفع وإرسال التسجيل الصوتي بنجاح");
+    } catch(err) {
+        toast("تعذر رفع الصوت للاستضافة");
+    }
 
 }
 
@@ -4588,16 +4624,13 @@ async function createInvite(){
 
         try{
 
-            avatar =
-                await compressImage(
-                    file,
-                    512,
-                    .7
-                );
+            toast("رفع صورة الدعوة إلى Supabase...");
+
+            avatar = await uploadToSupabase(file, "invites");
 
         }catch{
 
-            toast("تعذر تجهيز الصورة");
+            toast("تعذر رفع الصورة للاستضافة");
 
             return;
 
@@ -5153,17 +5186,77 @@ function chatInfo(){
 }
 
 /* =========================
-   CALL DEMO
+   REAL AI VOICE & VIDEO CALLS
 ========================= */
 
+function speakAIVoice(text, onEnd) {
+    if (!('speechSynthesis' in window)) {
+        if(onEnd) onEnd();
+        return;
+    }
+    
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ar-SA';
+    utterance.rate = 0.95;
+    utterance.pitch = 1.0;
+
+    utterance.onend = () => {
+        if (onEnd) onEnd();
+    };
+
+    utterance.onerror = () => {
+        if (onEnd) onEnd();
+    };
+
+    window.speechSynthesis.speak(utterance);
+}
+
 function startFakeCall(type){
+    if(!state.activeChat) {
+        toast("يرجى اختيار محادثة أولاً");
+        return;
+    }
 
-    toast(
-        type==="video"
-        ? "🎥 واجهة مكالمة الفيديو جاهزة للربط"
-        : "📞 واجهة المكالمة جاهزة للربط"
-    );
+    const targetUser = state.users[state.activeChat];
+    const isAI = targetUser && targetUser.isAI;
 
+    $("callTitle").textContent = type === "video" ? "مكالمة فيديو جارية..." : "مكالمة صوتية جارية...";
+    $("callStatus").textContent = "جاري الاتصال...";
+    
+    $("callModal").classList.remove("hidden");
+
+    if (type === "video") {
+        $("callAvatarBox").classList.add("hidden");
+        $("callVideoBox").classList.remove("hidden");
+    } else {
+        $("callAvatarBox").classList.remove("hidden");
+        $("callVideoBox").classList.add("hidden");
+    }
+
+    if (isAI) {
+        setTimeout(() => {
+            $("callStatus").textContent = "متصل بالذكاء الاصطناعي 🤖";
+            
+            const introMsg = "مرحباً بك! أنا مساعد NEGM الذكي معك الآن في المكالمة المباشرة، كيف يمكنني إجابتك اليوم؟";
+            
+            speakAIVoice(introMsg, () => {
+                if ($("callStatus")) $("callStatus").textContent = "في الانتظار... تحدث معه في أي وقت";
+            });
+        }, 1500);
+    } else {
+        setTimeout(() => {
+            $("callStatus").textContent = "جاري الرنين على " + targetUser.name + "...";
+        }, 1200);
+    }
+}
+
+function endCall(){
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+    }
+    $("callModal").classList.add("hidden");
+    toast("تم إنهاء المكالمة");
 }
 
 /* =========================
@@ -5414,6 +5507,10 @@ document.addEventListener(
                 .classList.add(
                     "hidden"
                 );
+
+            if(!$("callModal").classList.contains("hidden")){
+                endCall();
+            }
 
         }
 
