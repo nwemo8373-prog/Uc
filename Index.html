@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>NEGM CITY 3D</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#05070b;
+    font-family:Arial,sans-serif;
+    touch-action:none;
+}
+#game{
+    position:fixed;
+    inset:0;
+}
+canvas{
+    display:block;
+}
+
+/* HUD */
+#hud{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    color:white;
+}
+.top{
+    position:absolute;
+    top:16px;
+    left:16px;
+    right:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+}
+.brand{
+    font-size:18px;
+    font-weight:900;
+    letter-spacing:2px;
+    background:rgba(0,0,0,.45);
+    padding:10px 14px;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:14px;
+    backdrop-filter:blur(10px);
+}
+.stats{
+    display:flex;
+    gap:8px;
+    direction:ltr;
+}
+.stat{
+    min-width:78px;
+    text-align:center;
+    background:rgba(0,0,0,.45);
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:14px;
+    padding:8px;
+    backdrop-filter:blur(10px);
+}
+.stat small{
+    display:block;
+    opacity:.6;
+    font-size:9px;
+}
+.stat b{
+    font-size:16px;
+}
+
+#speed{
+    position:absolute;
+    left:18px;
+    bottom:22px;
+    width:125px;
+    height:125px;
+    border-radius:50%;
+    background:rgba(0,0,0,.55);
+    border:2px solid rgba(255,255,255,.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    backdrop-filter:blur(12px);
+}
+#speedValue{
+    font-size:34px;
+    font-weight:900;
+}
+#speed small{
+    opacity:.55;
+}
+
+#carName{
+    position:absolute;
+    top:78px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,.45);
+    padding:7px 14px;
+    border-radius:20px;
+    font-size:12px;
+    opacity:.8;
+}
+
+/* controls */
+.controls{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+}
+button{
+    border:0;
+    color:white;
+    font-weight:bold;
+    pointer-events:auto;
+    user-select:none;
+}
+.steering{
+    position:absolute;
+    left:18px;
+    bottom:165px;
+    display:flex;
+    gap:10px;
+}
+.control{
+    width:62px;
+    height:62px;
+    border-radius:20px;
+    background:rgba(8,12,18,.72);
+    border:1px solid rgba(255,255,255,.18);
+    font-size:25px;
+    backdrop-filter:blur(10px);
+}
+.control:active{
+    transform:scale(.92);
+    background:rgba(255,255,255,.18);
+}
+.pedals{
+    position:absolute;
+    right:18px;
+    bottom:25px;
+    display:flex;
+    gap:10px;
+    align-items:end;
+}
+.pedal{
+    width:68px;
+    height:68px;
+    border-radius:22px;
+    background:rgba(8,12,18,.72);
+    border:1px solid rgba(255,255,255,.18);
+    font-size:12px;
+}
+.pedal.big{
+    height:88px;
+}
+#brake{
+    font-size:22px;
+}
+
+#loading{
+    position:fixed;
+    inset:0;
+    z-index:10;
+    background:#05070b;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    transition:opacity .5s;
+}
+.loader{
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    border:4px solid rgba(255,255,255,.12);
+    border-top-color:white;
+    animation:spin 1s linear infinite;
+}
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
+#loadText{
+    margin-top:16px;
+    opacity:.65;
+    font-size:13px;
+}
+
+#tip{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    padding:12px 18px;
+    background:rgba(0,0,0,.55);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:16px;
+    font-size:12px;
+    opacity:0;
+    transition:.5s;
+}
+</style>
+</head>
+
+<body>
+
+<div id="game"></div>
+
+<div id="loading">
+    <div class="loader"></div>
+    <div id="loadText">جاري تحميل مدينة NEGM...</div>
+</div>
+
+<div id="hud">
+
+    <div class="top">
+        <div class="brand">NEGM CITY</div>
+
+        <div class="stats">
+            <div class="stat">
+                <small>KM/H</small>
+                <b id="miniSpeed">0</b>
+            </div>
+
+            <div class="stat">
+                <small>TIME</small>
+                <b id="timeText">DAY</b>
+            </div>
+        </div>
+    </div>
+
+    <div id="carName">MODEL</div>
+
+    <div id="speed">
+        <div id="speedValue">0</div>
+        <small>KM/H</small>
+    </div>
+
+    <div id="tip">استخدم الأزرار للقيادة</div>
+
+    <div class="controls">
+
+        <div class="steering">
+            <button class="control" id="left">◀</button>
+            <button class="control" id="right">▶</button>
+        </div>
+
+        <div class="pedals">
+            <button class="pedal" id="brake">■</button>
+            <button class="pedal big" id="gas">GAS</button>
+        </div>
+
+    </div>
+</div>
+
+<script type="module">
+
+import * as THREE from
+"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
+
+import {GLTFLoader} from
+"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/loaders/GLTFLoader.js";
+
+/* =========================================================
+   CAR FILES
+========================================================= */
+
+const CAR_FILES = [
+    "model.glb",
+    "model (1).glb",
+    "model (2).glb",
+    "model (3).glb",
+    "model (4).glb",
+    "model (5).glb",
+    "model (6).glb",
+    "model (7).glb",
+    "model (8).glb",
+    "model (9).glb",
+    "model (10).glb"
+];
+
+/* =========================================================
+   BASIC ENGINE
+========================================================= */
+
+const container = document.getElementById("game");
+
+const scene = new THREE.Scene();
+
+scene.background = new THREE.Color(0x8fb7d9);
+scene.fog = new THREE.Fog(0x8fb7d9,120,520);
+
+const camera = new THREE.PerspectiveCamera(
+    62,
+    innerWidth/innerHeight,
+    0.1,
+    1200
+);
+
+camera.position.set(0,7,12);
+
+const renderer = new THREE.WebGLRenderer({
+    antialias:true,
+    powerPreference:"high-performance"
+});
+
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.1;
+
+container.appendChild(renderer.domElement);
+
+/* =========================================================
+   LIGHTING
+========================================================= */
+
+const hemi = new THREE.HemisphereLight(
+    0xddeeff,
+    0x44505a,
+    2.0
+);
+
+scene.add(hemi);
+
+const sun = new THREE.DirectionalLight(
+    0xffffff,
+    3.2
+);
+
+sun.position.set(-100,160,80);
+sun.castShadow=true;
+
+sun.shadow.mapSize.set(2048,2048);
+
+sun.shadow.camera.left=-250;
+sun.shadow.camera.right=250;
+sun.shadow.camera.top=250;
+sun.shadow.camera.bottom=-250;
+
+scene.add(sun);
+
+/* =========================================================
+   MATERIAL HELPERS
+========================================================= */
+
+function mat(color,roughness=.8){
+
+    return new THREE.MeshStandardMaterial({
+        color,
+        roughness,
+        metalness:.05
+    });
+}
+
+/* =========================================================
+   GROUND
+========================================================= */
+
+const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(1000,1000),
+    mat(0x3f5941)
+);
+
+ground.rotation.x=-Math.PI/2;
+ground.receiveShadow=true;
+
+scene.add(ground);
+
+/* =========================================================
+   ROADS
+========================================================= */
+
+function createRoad(x,z,w,d){
+
+    const road = new THREE.Mesh(
+        new THREE.BoxGeometry(w,.12,d),
+        mat(0x25282c)
+    );
+
+    road.position.set(x,.05,z);
+    road.receiveShadow=true;
+
+    scene.add(road);
+
+    /* lane lines */
+
+    const lanes = Math.max(2,Math.floor(w/4));
+
+    for(let i=-lanes;i<=lanes;i++){
+
+        const line = new THREE.Mesh(
+            new THREE.BoxGeometry(.08,.025,d),
+            mat(0xe7e7df)
+        );
+
+        line.position.set(
+            x+i*3.5,
+            .12,
+            z
+        );
+
+        scene.add(line);
+    }
+}
+
+/* Main avenue */
+createRoad(0,0,28,800);
+
+/* Cross streets */
+for(let z=-220;z<=220;z+=110){
+    createRoad(0,z,520,18);
+}
+
+/* =========================================================
+   SIDEWALKS
+========================================================= */
+
+function sidewalk(x,z,w,d){
+
+    const s=new THREE.Mesh(
+        new THREE.BoxGeometry(w,.35,d),
+        mat(0x888b86)
+    );
+
+    s.position.set(x,.2,z);
+    s.receiveShadow=true;
+
+    scene.add(s);
+}
+
+sidewalk(-20,0,7,800);
+sidewalk(20,0,7,800);
+
+/* =========================================================
+   BUILDINGS
+========================================================= */
+
+function building(x,z,w,h,d){
+
+    const group=new THREE.Group();
+
+    const body=new THREE.Mesh(
+        new THREE.BoxGeometry(w,h,d),
+        mat(
+            new THREE.Color()
+            .setHSL(
+                .08+Math.random()*.08,
+                .12,
+                .35+Math.random()*.25
+            )
+        )
+    );
+
+    body.position.y=h/2;
+    body.castShadow=true;
+    body.receiveShadow=true;
+
+    group.add(body);
+
+    /* roof */
+    const roof=new THREE.Mesh(
+        new THREE.BoxGeometry(w+.3,.35,d+.3),
+        mat(0x30343a)
+    );
+
+    roof.position.y=h+.15;
+
+    group.add(roof);
+
+    /* windows */
+    for(let yy=3;yy<h;yy+=3.5){
+
+        for(let xx=-w/2+1.3;xx<w/2;xx+=2.6){
+
+            const windowMesh=new THREE.Mesh(
+                new THREE.BoxGeometry(.9,.9,.04),
+                new THREE.MeshStandardMaterial({
+                    color:0x8fc9e8,
+                    emissive:0x19384c,
+                    emissiveIntensity:.25,
+                    roughness:.25
+                })
+            );
+
+            windowMesh.position.set(
+                xx,
+                yy,
+                d/2+.025
+            );
+
+            group.add(windowMesh);
+        }
+    }
+
+    group.position.set(x,0,z);
+
+    scene.add(group);
+}
+
+/* City blocks */
+
+for(let z=-380;z<=380;z+=45){
+
+    building(-38,z,15,8+Math.random()*14,25);
+
+    building(38,z+15,15,10+Math.random()*18,28);
+
+    if(Math.random()>.35){
+
+        building(
+            -70,
+            z+18,
+            22,
+            9+Math.random()*20,
+            28
+        );
+    }
+
+    if(Math.random()>.35){
+
+        building(
+            70,
+            z-12,
+            22,
+            8+Math.random()*18,
+            28
+        );
+    }
+}
+
+/* =========================================================
+   TREES
+========================================================= */
+
+function tree(x,z){
+
+    const group=new THREE.Group();
+
+    const trunk=new THREE.Mesh(
+        new THREE.CylinderGeometry(.25,.38,2.5,8),
+        mat(0x65452e)
+    );
+
+    trunk.position.y=1.25;
+    trunk.castShadow=true;
+
+    group.add(trunk);
+
+    const crown=new THREE.Mesh(
+        new THREE.SphereGeometry(1.7,12,10),
+        mat(0x2d713b)
+    );
+
+    crown.position.y=3.1;
+    crown.scale.y=1.2;
+    crown.castShadow=true;
+
+    group.add(crown);
+
+    group.position.set(x,0,z);
+
+    scene.add(group);
+}
+
+for(let z=-390;z<=390;z+=13){
+
+    tree(-24,z);
+    tree(24,z+5);
+
+    if(z%52===0){
+
+        tree(-65,z);
+        tree(65,z+20);
+    }
+}
+
+/* =========================================================
+   STREET LIGHTS
+========================================================= */
+
+function lamp(x,z){
+
+    const pole=new THREE.Mesh(
+        new THREE.CylinderGeometry(.09,.13,5.5,8),
+        mat(0x252a2d,.4)
+    );
+
+    pole.position.set(x,2.75,z);
+    pole.castShadow=true;
+
+    scene.add(pole);
+
+    const light=new THREE.PointLight(
+        0xffe7aa,
+        .7,
+        20
+    );
+
+    light.position.set(x,5.5,z);
+
+    scene.add(light);
+
+    const bulb=new THREE.Mesh(
+        new THREE.SphereGeometry(.18,8,8),
+        new THREE.MeshBasicMaterial({
+            color:0xffe4a0
+        })
+    );
+
+    bulb.position.copy(light.position);
+
+    scene.add(bulb);
+}
+
+for(let z=-380;z<=380;z+=30){
+
+    lamp(-17,z);
+    lamp(17,z+14);
+}
+
+/* =========================================================
+   TRAFFIC SIGNALS
+========================================================= */
+
+function trafficLight(x,z){
+
+    const pole=new THREE.Mesh(
+        new THREE.CylinderGeometry(.12,.15,6,8),
+        mat(0x25282a)
+    );
+
+    pole.position.set(x,3,z);
+
+    scene.add(pole);
+
+    const box=new THREE.Mesh(
+        new THREE.BoxGeometry(.6,1.5,.45),
+        mat(0x111315)
+    );
+
+    box.position.set(x,5.1,z);
+
+    scene.add(box);
+
+    const colors=[
+        0xff2222,
+        0xffaa22,
+        0x22dd55
+    ];
+
+    colors.forEach((c,i)=>{
+
+        const bulb=new THREE.Mesh(
+            new THREE.SphereGeometry(.12,8,8),
+            new THREE.MeshBasicMaterial({color:c})
+        );
+
+        bulb.position.set(
+            x,
+            5.5-i*.4,
+            z-.24
+        );
+
+        scene.add(bulb);
+    });
+}
+
+for(let z=-220;z<=220;z+=110){
+
+    trafficLight(-14,z);
+    trafficLight(14,z);
+}
+
+/* =========================================================
+   CAR LOADING
+========================================================= */
+
+const loader=new GLTFLoader();
+
+const carTemplates=[];
+
+async function loadCars(){
+
+    let loaded=0;
+
+    for(const file of CAR_FILES){
+
+        try{
+
+            const gltf=await loader.loadAsync(file);
+
+            const model=gltf.scene;
+
+            model.traverse(obj=>{
+
+                if(obj.isMesh){
+
+                    obj.castShadow=true;
+                    obj.receiveShadow=true;
+
+                    if(obj.material){
+                        obj.material.envMapIntensity=.8;
+                    }
+                }
+            });
+
+            /* normalize size */
+
+            const box=new THREE.Box3().setFromObject(model);
+            const size=box.getSize(new THREE.Vector3());
+
+            const maxSize=Math.max(
+                size.x,
+                size.y,
+                size.z
+            );
+
+            const scale=4.2/maxSize;
+
+            model.scale.setScalar(scale);
+
+            carTemplates.push({
+                model,
+                file
+            });
+
+            loaded++;
+
+            document.getElementById("loadText").textContent =
+                `تحميل السيارات ${loaded}/${CAR_FILES.length}`;
+
+        }catch(err){
+
+            console.warn(
+                "تعذر تحميل:",
+                file,
+                err
+            );
+        }
+    }
+}
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+let player=null;
+
+const playerState={
+    speed:0,
+    rotation:0,
+    gas:false,
+    brake:false,
+    left:false,
+    right:false
+};
+
+function createPlayer(){
+
+    if(!carTemplates.length)return;
+
+    player=carTemplates[0].model.clone(true);
+
+    player.position.set(
+        0,
+        .35,
+        80
+    );
+
+    player.rotation.y=Math.PI;
+
+    scene.add(player);
+
+    document.getElementById("carName").textContent =
+        "PLAYER • " + CAR_FILES[0];
+}
+
+/* =========================================================
+   TRAFFIC
+========================================================= */
+
+const traffic=[];
+
+function createTraffic(){
+
+    if(!carTemplates.length)return;
+
+    /* Use every available car */
+    carTemplates.forEach((template,i)=>{
+
+        const car=template.model.clone(true);
+
+        const lane=(i%5-2)*3.5;
+
+        car.position.set(
+            lane,
+            .35,
+            -350-i*45
+        );
+
+        car.rotation.y=Math.PI;
+
+        scene.add(car);
+
+        traffic.push({
+            mesh:car,
+            speed:0.12+Math.random()*.16,
+            lane,
+            offset:i*45
+        });
+    });
+}
+
+/* =========================================================
+   MOBILE BUTTONS
+========================================================= */
+
+function holdButton(id,property){
+
+    const el=document.getElementById(id);
+
+    const down=e=>{
+        e.preventDefault();
+        playerState[property]=true;
+    };
+
+    const up=e=>{
+        e.preventDefault();
+        playerState[property]=false;
+    };
+
+    el.addEventListener("pointerdown",down);
+    el.addEventListener("pointerup",up);
+    el.addEventListener("pointercancel",up);
+    el.addEventListener("pointerleave",up);
+}
+
+holdButton("gas","gas");
+holdButton("brake","brake");
+holdButton("left","left");
+holdButton("right","right");
+
+/* Keyboard too */
+
+window.addEventListener("keydown",e=>{
+
+    if(e.key==="ArrowUp" || e.key==="w")
+        playerState.gas=true;
+
+    if(e.key==="ArrowDown" || e.key==="s")
+        playerState.brake=true;
+
+    if(e.key==="ArrowLeft" || e.key==="a")
+        playerState.left=true;
+
+    if(e.key==="ArrowRight" || e.key==="d")
+        playerState.right=true;
+});
+
+window.addEventListener("keyup",e=>{
+
+    if(e.key==="ArrowUp" || e.key==="w")
+        playerState.gas=false;
+
+    if(e.key==="ArrowDown" || e.key==="s")
+        playerState.brake=false;
+
+    if(e.key==="ArrowLeft" || e.key==="a")
+        playerState.left=false;
+
+    if(e.key==="ArrowRight" || e.key==="d")
+        playerState.right=false;
+});
+
+/* =========================================================
+   COLLISION
+========================================================= */
+
+function checkCollision(){
+
+    if(!player)return;
+
+    const pBox=new THREE.Box3()
+        .setFromObject(player)
+        .expandByScalar(-.35);
+
+    for(const t of traffic){
+
+        const tBox=new THREE.Box3()
+            .setFromObject(t.mesh)
+            .expandByScalar(-.3);
+
+        if(pBox.intersectsBox(tBox)){
+
+            playerState.speed*=.88;
+
+            t.speed*=.5;
+        }
+    }
+}
+
+/* =========================================================
+   PLAYER PHYSICS
+========================================================= */
+
+function updatePlayer(dt){
+
+    if(!player)return;
+
+    const maxSpeed=.95;
+
+    if(playerState.gas){
+
+        playerState.speed+=.018;
+
+    }else{
+
+        playerState.speed*=.985;
+    }
+
+    if(playerState.brake){
+
+        playerState.speed-=.035;
+    }
+
+    playerState.speed=THREE.MathUtils.clamp(
+        playerState.speed,
+        0,
+        maxSpeed
+    );
+
+    let steer=0;
+
+    if(playerState.left)steer+=1;
+    if(playerState.right)steer-=1;
+
+    playerState.rotation +=
+        steer *
+        playerState.speed *
+        .045;
+
+    player.rotation.y =
+        Math.PI+
+        playerState.rotation;
+
+    const direction=new THREE.Vector3(
+        Math.sin(player.rotation.y),
+        0,
+        Math.cos(player.rotation.y)
+    );
+
+    player.position.addScaledVector(
+        direction,
+        -playerState.speed
+    );
+
+    /* keep on city road */
+
+    player.position.x=
+        THREE.MathUtils.clamp(
+            player.position.x,
+            -12,
+            12
+        );
+
+    /* infinite city road */
+
+    if(player.position.z>380)
+        player.position.z=-380;
+
+    if(player.position.z<-380)
+        player.position.z=380;
+}
+
+/* =========================================================
+   TRAFFIC UPDATE
+========================================================= */
+
+function updateTraffic(){
+
+    for(const t of traffic){
+
+        t.mesh.position.z += t.speed;
+
+        if(t.mesh.position.z>430){
+
+            t.mesh.position.z=-430;
+        }
+
+        /* tiny natural variation */
+
+        t.mesh.position.x +=
+            Math.sin(
+                t.mesh.position.z*.015+
+                t.offset
+            )*.0015;
+    }
+}
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+const desiredCamera=new THREE.Vector3();
+
+function updateCamera(){
+
+    if(!player)return;
+
+    const offset=new THREE.Vector3(
+        0,
+        6.2,
+        11
+    );
+
+    offset.applyAxisAngle(
+        new THREE.Vector3(0,1,0),
+        player.rotation.y
+    );
+
+    desiredCamera
+        .copy(player.position)
+        .add(offset);
+
+    camera.position.lerp(
+        desiredCamera,
+        .075
+    );
+
+    const lookAt=
+        player.position.clone();
+
+    lookAt.y+=1.5;
+
+    camera.lookAt(lookAt);
+}
+
+/* =========================================================
+   DAY / NIGHT
+========================================================= */
+
+let night=false;
+let elapsed=0;
+
+function updateTime(dt){
+
+    elapsed+=dt;
+
+    /* every 45 seconds switch */
+
+    if(elapsed>45){
+
+        elapsed=0;
+        night=!night;
+
+        if(night){
+
+            scene.background.set(0x07111f);
+            scene.fog.color.set(0x07111f);
+
+            hemi.intensity=.45;
+            sun.intensity=.65;
+
+            document.getElementById("timeText")
+                .textContent="NIGHT";
+
+        }else{
+
+            scene.background.set(0x8fb7d9);
+            scene.fog.color.set(0x8fb7d9);
+
+            hemi.intensity=2;
+            sun.intensity=3.2;
+
+            document.getElementById("timeText")
+                .textContent="DAY";
+        }
+    }
+}
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function updateHUD(){
+
+    const kmh=Math.round(
+        playerState.speed*100
+    );
+
+    document.getElementById("speedValue")
+        .textContent=kmh;
+
+    document.getElementById("miniSpeed")
+        .textContent=kmh;
+}
+
+/* =========================================================
+   START
+========================================================= */
+
+async function start(){
+
+    await loadCars();
+
+    createPlayer();
+
+    createTraffic();
+
+    document.getElementById("loading").style.opacity="0";
+
+    setTimeout(()=>{
+        document.getElementById("loading").style.display="none";
+
+        const tip=document.getElementById("tip");
+        tip.style.opacity="1";
+
+        setTimeout(()=>{
+            tip.style.opacity="0";
+        },2500);
+
+    },500);
+}
+
+start();
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+const clock=new THREE.Clock();
+
+function animate(){
+
+    requestAnimationFrame(animate);
+
+    const dt=Math.min(
+        clock.getDelta(),
+        .033
+    );
+
+    updatePlayer(dt);
+    updateTraffic();
+    checkCollision();
+    updateCamera();
+    updateTime(dt);
+    updateHUD();
+
+    renderer.render(
+        scene,
+        camera
+    );
+}
+
+animate();
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+window.addEventListener("resize",()=>{
+
+    camera.aspect=
+        innerWidth/innerHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+        innerWidth,
+        innerHeight
+    );
+});
+
+</script>
+
+</body>
+                                                </html>
